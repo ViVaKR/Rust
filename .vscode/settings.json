@@ -1,0 +1,8 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./viv_demo/Cargo.toml",
+        "./viv_demo/Cargo.toml",
+        "./viv_demo/Cargo.toml"
+    ],
+    "rust-analyzer.showUnlinkedFileNotification": false
+}
