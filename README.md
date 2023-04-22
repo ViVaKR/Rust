@@ -11,7 +11,6 @@
 
 ```bash
     $ cargo new hello-world
-    
 ```
 
 ## References & Documents

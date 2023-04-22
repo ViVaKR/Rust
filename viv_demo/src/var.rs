@@ -44,4 +44,12 @@ pub fn var() {
     let rnd = rand::thread_rng().gen_range(1..101);
     println!("Random : {}", rnd);
 
+
+}
+
+fn var_b() {
+
+    let x: u64 = 45; // i32
+    let f: f32 = 6.7;
+    let b:bool = false;
 }
