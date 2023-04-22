@@ -1,11 +1,13 @@
 #![allow(unused)]
-mod print;
-mod var;
-mod if_;
-mod match_;
 mod array_;
-mod tupple_;
+mod if_;
 mod loop_;
+mod match_;
+mod print;
+mod regex_;
+mod tupple_;
+mod var;
+mod while_;
 
 use rand::Rng;
 use std::cmp::Ordering;
@@ -23,9 +25,11 @@ fn main() {
     println!("5. Array");
     println!("6. tupple");
     println!("7. loop");
+    println!("8. while");
     println!("100. Exit");
     println!("************************");
     print!(">> ");
+
     std::io::stdout().flush().unwrap();
 
     let mut input = String::new();
@@ -45,7 +49,8 @@ fn main() {
         "5" => array_::array_(),
         "6" => tupple_::tupple_(),
         "7" => loop_::loop_(),
+        "8" => while_::while_(),
         "100" => println!("***** 프로그램 종료! *****"),
-        _ => println!("잘못된 입력입니다! 숫자만 선택하세요"),
+        _ => println!("잘못된 입력입니다! 숫자만 선택하세요")
     };
 }

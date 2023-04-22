@@ -15,6 +15,8 @@
 
 ## References & Documents
 
+> [doc.rust-lang](https://doc.rust-lang.org/cargo/getting-started/first-steps.html)
+> 
 > [docs.rs](https://docs.rs/)
 >
 > [crates.io](https://crates.io/)
@@ -22,7 +24,9 @@
 ## Build & Run
 
 ```bash
-    cargo build && cargo run
+    cargo build && cargo run # puts the result -> target/dubug
+	# or
+	cargo build --release # puts the result -> target/release instead of target/debug
 ```
 
 ## 변수 (Variable)

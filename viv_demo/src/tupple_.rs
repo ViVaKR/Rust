@@ -1,12 +1,5 @@
 #![allow(unused)]
 
-use rand::Rng;
-use std::cmp::Ordering;
-use std::collections::btree_map::Values;
-use std::fs::File;
-use std::io;
-use std::io::{BufRead, BufReader, ErrorKind, Write};
-
 pub fn tupple_() {
 
     println!("Hello Tupple");

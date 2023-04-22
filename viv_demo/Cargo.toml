@@ -6,3 +6,5 @@ authors = ["Viv <kimburmjun@gmail.com>"]
 
 [dependencies]
 rand = "0.8.5"
+regex = "1.8.1"
+time = "0.3.20"

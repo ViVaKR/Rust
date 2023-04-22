@@ -1,3 +1,3 @@
 #! /bin/bash
 
-cargo build && ./target/debug/viv_demo
+cargo build && cargo run

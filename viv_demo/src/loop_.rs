@@ -4,11 +4,13 @@ pub fn loop_() {
     println!("***** loop *****");
     let mut n = 0;
     loop {
-        n += 1;
-        println!("n = {}", n);
-
-        if n > 10 {
+        if n > 30 {
             break;
         };
+        n += 1;
+        if n == 7 {
+            continue;
+        }
+        println!("n = {}", n);
     }
 }
