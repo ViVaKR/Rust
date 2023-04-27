@@ -7,15 +7,30 @@ use std::cmp::Ordering;
 pub fn func_() {
     println!("***** func_ *****");
     print_numbers_to(10);
+
+    for n in 1..30 {
+        println!(
+            "{:02} -> {}",
+            n,
+            if is_even(n) == true {
+                "짝"
+            } else {
+                "홀"
+            }
+        );
+    }
 }
 
 pub fn print_numbers_to(num: u32) {
-
-    // 
     for n in 1..num {
         println!("number : {}", n);
     }
 }
+
+fn is_even(num: u32) -> bool {
+    return num % 2 == 0;
+}
+
 pub enum Dir {
     Up,
     Down,
