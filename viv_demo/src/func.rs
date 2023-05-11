@@ -4,6 +4,17 @@ const MAXIMUM_NUMBER: u8 = 20;
 use rand::Rng;
 use std::cmp::Ordering;
 
+struct Color {
+    red: u8, // u8: 0 - 255
+    green: u8,
+    blue: u8
+}
+
+pub fn struct_() {
+    let bg = Color {red:255, green: 70, blue: 15};
+    println!("{}", bg.red);
+}
+
 pub fn func_() {
     println!("***** func_ *****");
     print_numbers_to(10);
@@ -12,13 +23,11 @@ pub fn func_() {
         println!(
             "{:02} -> {}",
             n,
-            if is_even(n) == true {
-                "짝"
-            } else {
-                "홀"
-            }
+            if is_even(n) == true { "짝" } else { "홀" }
         );
     }
+
+    
 }
 
 pub fn print_numbers_to(num: u32) {
@@ -98,6 +107,7 @@ pub fn tupple_() {
     println!("a: {}, b: {}, c: {}", a, b, c);
 }
 
+// (2) 변수
 pub fn var_() {
     println!();
     println!("***** Variable & Type *****");
@@ -135,6 +145,13 @@ pub fn var_() {
     println!("랜덤번호");
     let rnd = rand::thread_rng().gen_range(1..101);
     println!("Random : {}", rnd);
+
+    // 변수의 범위
+    let x = 10;
+    {
+        let y = 5; // 컬리브라켓 내부에서만 유효
+        println!("x: {}, y: {}", x, y);
+    }
 }
 
 pub fn match_() {
@@ -258,3 +275,15 @@ pub fn loop_() {
         println!("Maximum number {}", n);
     }
 }
+
+// 참조
+pub fn refs_() {
+    let mut x = 10;
+    {
+        let dom = &mut x;
+        *dom += 1;
+    }
+
+    println!("x is {}", x);
+}
+

@@ -16,6 +16,8 @@ use crate::func::print_;
 use crate::func::tupple_;
 use crate::func::var_;
 use crate::func::while_;
+use crate::func::refs_;
+use crate::func::struct_;
 
 use crate::libs::demo::demo_;
 
@@ -29,7 +31,7 @@ fn main() {
         println!();
         println!("***** 메뉴선택 (숫자) *****");
         println!("{:03}. Print", 1);
-        println!("{:03}. If Statement", 2);
+        println!("{:03}. 변수 1", 2);
         println!("{:03}. Match Statement", 3);
         println!("{:03}. Array", 4);
         println!("{:03}. Tupple", 5);
@@ -37,8 +39,11 @@ fn main() {
         println!("{:03}. While Loop", 7);
         println!("{:03}. Enum", 8);
         println!("{:03}. Demo", 9);
-        println!("{:03}. Variable", 10);
-        println!("{:03}. Function", 11);
+        println!("{:03}. 변수 2", 10);
+        println!("{:03}. 함수", 11);
+        println!("{:03}. 참조", 12);
+        println!("{:03}. struct", 13);
+
         println!("{:03}. Exit", 100);
         println!("**************************");
         print!(">> ");
@@ -53,8 +58,7 @@ fn main() {
 
         // 화면정리
         print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
-        println!();
-        println!("//////////////////////////////////////");
+        println!("\n*****************************************\n");
 
         match input.trim_end() {
             "1" => print_(),
@@ -68,9 +72,11 @@ fn main() {
             "9" => enum_(),
             "10" => demo_(),
             "11" => func_(),
+            "12" => refs_(),
+            "13" => struct_(),
 
             "100" => {
-                println!("***** 프로그램 종료! *****");
+                println!("************* 프로그램 종료 *************");
                 break;
             }
             _ => {
@@ -78,8 +84,6 @@ fn main() {
                 break;
             }
         };
-        println!();
-        println!("******************");
-        println!();
+        println!("\n******************* Bottom **********************\n");
     }
 }
