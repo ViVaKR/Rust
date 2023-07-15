@@ -12,7 +12,7 @@ struct Color {
 
 pub fn struct_() {
     let bg = Color {red:255, green: 70, blue: 15};
-    println!("{}", bg.red);
+    println!("{}, {}, {}", bg.red, bg.blue, bg.green);
 }
 
 pub fn func_() {
