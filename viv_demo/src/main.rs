@@ -1,4 +1,5 @@
 // #![allow(unused)]
+// #[allow(dead_code)]
 
 mod libs {
     pub mod demo;
@@ -18,13 +19,13 @@ use crate::func::var_;
 use crate::func::while_;
 use crate::func::refs_;
 use crate::func::struct_;
-
 use crate::libs::demo::demo_;
 
 use std::io;
 use std::io::Write;
 
-#[allow(dead_code)]
+
+
 fn main() {
     let mut input: String = String::new();
     while input != "100" {
@@ -57,7 +58,7 @@ fn main() {
             .expect("Failed to read line.");
 
         // 화면정리
-        print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
+        // print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
         println!("\n*****************************************\n");
 
         match input.trim_end() {
@@ -84,6 +85,5 @@ fn main() {
                 break;
             }
         };
-        println!("\n******************* Bottom **********************\n");
     }
 }
