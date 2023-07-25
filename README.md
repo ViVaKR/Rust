@@ -1,22 +1,22 @@
 # Rust
 
 ## 소개
+
 1. 빠르면서도 안전함 (High Performance)
 2. 가비지 컬렉션 불필요 (Garbage Collection Not Necessary)
 3. Concurrent Programming
 4. Easy to Understand Errors
 
-
 ## 프로젝트 생성
 
 ```bash
-    $ cargo new hello-world
+    cargo new hello-world
 ```
 
 ## References & Documents
 
 > [doc.rust-lang](https://doc.rust-lang.org/cargo/getting-started/first-steps.html)
-> 
+>
 > [docs.rs](https://docs.rs/)
 >
 > [crates.io](https://crates.io/)
@@ -25,17 +25,17 @@
 
 ```bash
     cargo build && cargo run # puts the result -> target/dubug
-	# or
-	cargo build --release # puts the result -> target/release instead of target/debug
+ # or
+ cargo build --release # puts the result -> target/release instead of target/debug
 ```
 
 ## 변수 (Variable)
 
-- Mutable, Immutable, const 
+- Mutable, Immutable, const
   - 기본변수는 불변성으로 값이 할당 되면 변경할 수 없음
   - `mut` 키워드를 접두어로 사용하여 가변성으로 선언 할 수있음
   - `상수(const)` 는 런타임에 결정되는 값은 할당할 수 없으며
-  - 오직 상수 리터럴만으로 할당할 수 있음 
+  - 오직 상수 리터럴만으로 할당할 수 있음
 - 접두사
   - `i` : Signed
   - `u` : UnSigned
@@ -74,47 +74,47 @@
 
 ```json
 {
-	"Viv println text": {
-		"prefix": "pl",
-		"body": [
-			"println!(\"${1:Hello World!}\");$0"
-		],
-		"description": "Viv println text"
-	},
-	"Viv println blank": {
-		"prefix": "plb",
-		"body": [
-			"println!(${1});$0"
-		],
-		"description": "Viv println blank"
-	},
-	"Viv println one": {
-		"prefix": "pl1",
-		"body": [
-			"println!(\"${1:text}{}$2\", ${3:var});$0"
-		],
-		"description": "Viv println one"
-	},
-	"Viv println two": {
-		"prefix": "pl2",
-		"body": [
-			"println!(\"${1:text} {}$2 {}$3\", ${4:var1}, ${5:var2});$0"
-		],
-		"description": "Viv println two"
-	},
-	"Viv Default Use": {
-		"prefix": "#v",
-		"body": [
-			"#![allow(unused)]",
-			"",
-			"use std::io;",
-			"use rand::Rng;",
-			"use std::io:: {Write, BufReader, BufRead, ErrorKind};",
-			"use std::fs::File;",
-			"use std::cmp::Ordering;"
-		],
-		"description": "Viv default use"
-	}
+ "Viv println text": {
+  "prefix": "pl",
+  "body": [
+   "println!(\"${1:Hello World!}\");$0"
+  ],
+  "description": "Viv println text"
+ },
+ "Viv println blank": {
+  "prefix": "plb",
+  "body": [
+   "println!(${1});$0"
+  ],
+  "description": "Viv println blank"
+ },
+ "Viv println one": {
+  "prefix": "pl1",
+  "body": [
+   "println!(\"${1:text}{}$2\", ${3:var});$0"
+  ],
+  "description": "Viv println one"
+ },
+ "Viv println two": {
+  "prefix": "pl2",
+  "body": [
+   "println!(\"${1:text} {}$2 {}$3\", ${4:var1}, ${5:var2});$0"
+  ],
+  "description": "Viv println two"
+ },
+ "Viv Default Use": {
+  "prefix": "#v",
+  "body": [
+   "#![allow(unused)]",
+   "",
+   "use std::io;",
+   "use rand::Rng;",
+   "use std::io:: {Write, BufReader, BufRead, ErrorKind};",
+   "use std::fs::File;",
+   "use std::cmp::Ordering;"
+  ],
+  "description": "Viv default use"
+ }
 }
 ```
 

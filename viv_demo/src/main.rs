@@ -1,4 +1,4 @@
-// #![allow(unused)]
+#![allow(unused)]
 // #[allow(dead_code)]
 
 mod libs {
@@ -23,8 +23,6 @@ use crate::libs::demo::demo_;
 
 use std::io;
 use std::io::Write;
-
-
 
 fn main() {
     let mut input: String = String::new();
