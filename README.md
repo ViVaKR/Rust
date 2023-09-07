@@ -10,7 +10,7 @@
 ## 프로젝트 생성
 
 ```bash
-    cargo new hello-world
+    cargo new viv_tutorial
 ```
 
 ## References & Documents
