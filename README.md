@@ -14,6 +14,8 @@
   $ cargo test
   $ cargo doc
   $ cargo publish
+  $ cargo --help
+  $ cargo check
   $ cargo login
   $ (paste token) : `create-io` saved
 
@@ -34,6 +36,10 @@
 7. Built-in dependency management, similar to npm
 8. Quickly growing ecosystem of libraries
 9. Friendly & welcoming developer community
+10. Memory safety
+11. Userfull compiler output
+12. Rich type system
+13. Fast adoption in various branches
 
 ## References & Documents
 
