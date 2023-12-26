@@ -1,22 +1,27 @@
 # Rust
 
+## Start
+
 ```bash
   $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
   $ rustc --version
   $ cargo --version
   $ rustup update
+  $ cargo new hello-rust
+  $ cd hello-rust
   $ cargo build
   $ cargo run
   $ cargo test
   $ cargo doc
   $ cargo publish
+  $ cargo login
+  $ (paste token) : `create-io` saved
 
-  $ cargo new hello-rust
+
   # Cargo.toml : is the manifest file for Rust. It's where you keep metadata for your project, as well as dependencies.
   # src/main.rs : is where we'll write our application code.
 
 ```
-
 
 ## 소개
 
