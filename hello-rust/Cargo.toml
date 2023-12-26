@@ -1,5 +1,5 @@
 [package]
-name = "hello-rust"
+name = "viv-helloworld"
 version = "0.1.0"
 rust-version = "1.74.1"
 edition = "2021"
@@ -10,7 +10,6 @@ repository = "https://github.com/ViVaKR/Rust.git"
 license = "MIT"
 description = "First Rust Project"
 keywords = ["helloworld","bootcamp"]
-license-file = "LICENSE.txt"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
