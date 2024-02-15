@@ -7,6 +7,7 @@
   $ rustc --version
   $ cargo --version
   $ rustup update
+  $ rustup doc
   $ cargo new hello-rust
   $ cd hello-rust
   $ cargo build
@@ -92,7 +93,7 @@
   * `Binary` : ob1111_0000
   * `Byte (u8)` : b'A'
 * Boolean
-  * `bool`  
+  * `bool`
 * Character
   * `U+0000 ~ U+D7FF`
   * `U+E000 ~ U+10FFF`
@@ -142,11 +143,11 @@
   * `{ a + b }` : Body
 
 ```rust
-  
+
   fn add(a: i32, b: i32) -> i32 {
     a + b
   }
-  
+
   let x = add(1, 1);
   let y = add(3, 0);
   let z = add (x, 1);
@@ -217,6 +218,6 @@
 }
 ```
 
-### Ref. [Derek Banas](https://youtu.be/ygL_xcavzQ4)  
+### Ref. [Derek Banas](https://youtu.be/ygL_xcavzQ4)
 
-### Ref. [Zero To Mastery](https://youtube.com/watch?v=lzKeecy4OmQ&si=p80MRuRI7B7CNgkT)  
+### Ref. [Zero To Mastery](https://youtube.com/watch?v=lzKeecy4OmQ&si=p80MRuRI7B7CNgkT)
