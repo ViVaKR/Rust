@@ -9,6 +9,6 @@ readme = "README.md"
 repository = "https://github.com/ViVaKR/Rust.git"
 license = "MIT"
 description = "First Rust Project"
-keywords = ["helloworld","bootcamp"]
+keywords = ["helloworld", "bootcamp"]
 
 [dependencies]
