@@ -51,12 +51,12 @@
 ## Data Types
 
 * Memory only stores binary data
-  * Anythin can be represented in binary
+    * Anythin can be represented in binary
 * Program determines what the binary represents
 * Basic types that are universally useful are provided by the language
 
 * 메모리는 이진 데이터만 저장합니다
-  * 모든 사물은 이진법으로 나타낼 수 있습니다
+    * 모든 사물은 이진법으로 나타낼 수 있습니다
 * 프로그램은 이진법이 무엇을 나타내는지 결정합니다
 * 언어에 의해 보편적으로 유용한 기본 유형이 제공됩니다
 
@@ -71,32 +71,32 @@
 ## 변수 (Variable)
 
 * Mutable, Immutable, const
-  * 기본적으로 변수는 불변성으로 값이 할당 되면 변경할 수 없음
-  * `mut` 키워드를 접두어로 사용하여 가변성으로 선언 할 수있음
-  * `상수(const)` 는 런타임에 결정되는 값은 할당할 수 없으며
-  * 오직 상수 리터럴만으로 할당할 수 있음
+    * 기본적으로 변수는 불변성으로 값이 할당 되면 변경할 수 없음
+    * `mut` 키워드를 접두어로 사용하여 가변성으로 선언 할 수있음
+    * `상수(const)` 는 런타임에 결정되는 값은 할당할 수 없으며
+    * 오직 상수 리터럴만으로 할당할 수 있음
 * 접두사
-  * `i` : Signed
-  * `u` : UnSigned
-  * `isize` or `usize` : 컴퓨터 아키텍처에 따라 32bit 혹은 64bit 로 결정
+    * `i` : Signed
+    * `u` : UnSigned
+    * `isize` or `usize` : 컴퓨터 아키텍처에 따라 32bit 혹은 64bit 로 결정
 * 정수
-  * `i8` or `u8` : 8-bit
-  * `i16` or `u16` : 16-bit
-  * `i32` or `u32` : 32-bit
-  * `isize` or `usize` : by Architecture 32 or 64-bit
+    * `i8` or `u8` : 8-bit
+    * `i16` or `u16` : 16-bit
+    * `i32` or `u32` : 32-bit
+    * `isize` or `usize` : by Architecture 32 or 64-bit
 * 부동 소수점
-  * `f32` or `f64`
+    * `f32` or `f64`
 * 리터럴
-  * `Decimal` : 1_000_000
-  * `Hex` : 0xff
-  * `Octal` : 0o77
-  * `Binary` : ob1111_0000
-  * `Byte (u8)` : b'A'
+    * `Decimal` : 1_000_000
+    * `Hex` : 0xff
+    * `Octal` : 0o77
+    * `Binary` : ob1111_0000
+    * `Byte (u8)` : b'A'
 * Boolean
-  * `bool`
+    * `bool`
 * Character
-  * `U+0000 ~ U+D7FF`
-  * `U+E000 ~ U+10FFF`
+    * `U+0000 ~ U+D7FF`
+    * `U+E000 ~ U+10FFF`
 
 ```bash
     Max u32 :       4294967295
@@ -108,7 +108,7 @@
 ```
 
 * Assign data to a temporary memeory location
-  * Allows programmer to easily work with memory
+    * Allows programmer to easily work with memory
 * Can be set to any value & type
 * Immutable[^1] by default, but can be mutable[^2]
 
@@ -133,14 +133,14 @@
 * Optionally accept data, 선택적으로 데이터 수락
 * Optionally return data, 선택적으로 데이터 반환
 * Utilized for code organization, 코드를 조직화 하는 기능
-  * Also makes cod easier to read, 가독성 향상
+    * Also makes cod easier to read, 가독성 향상
 
 * Anatomy of a function
-  * `fn` : 키워드
-  * `add` : Name
-  * `(a: i32, b: i32)` : Parameters
-  * `-> i32` : Return Type
-  * `{ a + b }` : Body
+    * `fn` : 키워드
+    * `add` : Name
+    * `(a: i32, b: i32)` : Parameters
+    * `-> i32` : Return Type
+    * `{ a + b }` : Body
 
 ```rust
 
