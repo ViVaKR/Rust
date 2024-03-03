@@ -1,20 +1,31 @@
 ﻿# viv-camp
 
-## Start
+## Owernership (소유권)
 
-- Pointer sized integer type, matches size of a word in given platform
-- Numbers - usize & isize
+> Owner : 값의 소유자는 값을 유지하는 변수 또는 데이터 구조이며 해당 데이터를 저장하는 데 사용되는 메모리를 할당하고 해제하는 역할을 합니다.
 
-## What is a word? (워드)
+- Rust의 소유권 시스템은 고유하며 다른 프로그래밍 언어와 차별화됩니다.
+- 메모리 관리를 관리하는 규칙 집합입니다.
+- 규칙은 컴파일 시 적용됩니다.
+- 규칙을 위반하면 프로그램이 컴파일되지 않습니다.
+    - Each value in Rust has an owner (각 값에는 소유자가 있음)
+    - There can only be one owner at a time (소유자는 한 번에 하나만 있을 수 있음)
+    - When the owner goes out of scope, the value will be dropped. (소유자가 범위를 벗어나면 가치가 떨어집니다.)
 
->- Processor does NOT read 1byte a a time from memory, read 1 word at a time.
->- In a 32-bit processor it can access 4 bytes (32 bits) at a time.
-    >- 32 bit architecture, word => 4bytes
->- In a 64-bit processor it can access 8 bytes (64 bits) at a time.
->- usize gives you the guaratee to be always big enough to hold any pointer or any offset in a data structure
+## Basic Types
 
-## Floating Point (부동 소수점)
+- Functions:
+    - Block of reusable code that performs a specific tasks
+    - Can take arguments, processes those inputs and return a result
 
->- f32 - size of 32 bits
->- f64 - size of 64 bits
->- Representation according to IEEE-754 specification
+- Diverging Functions:
+    - Nerver return to the caller
+    - E.g. panic, looping forever, quitting the program
+
+## 스택 메모리
+
+- 마지막이 먼저.
+- 스택에 저장된 모든 데이터는 알려진 고정된 크기(예: 정수, 플로트, 차, 부 등)를 가져야 합니다.
+- 새로운 데이터의 위치가 항상 스택의 맨 위에 있기 때문에 스택으로 푸시하는 것이 힙에 대한 할당보다 빠릅니다.
+- 크기를 알 수 없는 유형이 힙에 할당되고 값에 대한 포인터가 스택에 푸시됩니다. 왜냐하면 포인터가 고정 크기이기 때문입니다.
+
