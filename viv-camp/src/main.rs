@@ -13,12 +13,13 @@ fn main() {
 
     loop {
         println!("Select Menu (1 ~ 100, Exit: 0)");
-        print!("Enter Number: ");
+        print!(">> ");
         io::stdout().flush().unwrap();
         input.clear();
         let mut choice: u32 = 0;
         let b = io::stdin().read_line(&mut input).expect("Not integer");
         println!("Input {}, Size: {}", choice, b);
+
         if let Ok(val) = input.trim().parse::<u32>() {
             choice = val;
         } else {
@@ -57,6 +58,7 @@ fn main() {
             19 => shadowing(),
             20 => _ = statement_expression(),
             21 => five_caller(),
+            22 => control_flow(rand::thread_rng().gen_range(1..=100)),
             _ => break,
         }
     }
@@ -66,16 +68,86 @@ fn main() {
 fn control_flow(number: i32) {
     /*
          [ if statement ]
+         - 표현식 if 를 사용하면 조건에 따라 코드를 분기할 수 있습니다.
+         - 조건을 제공한 다음
+         - 이조건이 충족되면 이 코드 블록을 실행하고
+         - 충족되지 않으면 이 코드 블록을 실행하지 마세요..
 
-
-         [ loop statement ]
-
-
+         [ loop, while, for statement ]
+         - 코드 블록을 두 번 이상 실행하는 것이 유용한 경우가 많음.
+         - 코드 블록 끝에서 다시 즉시 처음 부터 시작한는 여러 루프를 제공함.
+         - loop : 무한 반복, 명시적인 중지 지시(break, ctrl + c)할 때 까지 반복
 
     */
+
+    /* if statement */
     if number < 100 {
-        println!("condition is true");
+        // 조건 100 보다 파라미터 number 가 작은 값인지 확인하기
+        println!("{number} -> condition was true");
+    } else {
+        println!("{number} -> condition was false");
     }
+
+    // 다중 조건식
+    if number % 4 == 0 {
+        // 조건 1
+        println!("number  is divisible by 4")
+    } else if number % 3 == 0 {
+        // 조건 2
+        println!("number is divisible by 3");
+    } else if number % 2 == 0 {
+        // 조건 3
+        println!("number is divisible by 2");
+    } else {
+        // 그외 모든 조건
+        println!("number is not divisible by 4, 3, or 2");
+    }
+
+    // if 문에서 let 사용
+    // 숫자 자체도 표현식이됨
+    let check = number % 3;
+    let cond = if check == 0 { 300 } else { 500 };
+    println!("The value of number ({number} % 3) is: {check}, choice = {cond}");
+
+    /* loop */
+    let mut count = 0;
+    let mut sum = 0;
+    let result = loop {
+        if count == 50 {
+            break sum;
+        }
+        count += 1;
+        sum += count;
+    };
+
+    println!("The result is {result}");
+
+    // while
+
+    let mut number = 3;
+    while number != 0 {
+        println!("{number}");
+        number -= 1;
+    }
+    println!("LIFTOFF!!!");
+
+    let a = [10, 20, 30, 40, 50];
+    let mut index = 0;
+    while index < 5 {
+        println!("The array value is: {}", a[index]);
+        index += 1;
+    }
+
+    // for
+    for element in a {
+        println!("The for loop value is: {element}");
+    }
+
+    for num in (1..4).rev() {
+        // 역순 카운트
+        println!("{num}!");
+    }
+    println!("LIFTOFF!!");
 }
 
 // 명령문 (Statement), 표현식 (Expression)
