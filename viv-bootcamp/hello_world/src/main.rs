@@ -1,7 +1,10 @@
+mod a_001;
 use std::io;
 use std::io::Write;
 
 fn main() {
+    let a = 45f32;
+    let b = 17f32;
     let mut input = String::new();
 
     print!("Input Your Messages");
@@ -38,7 +41,7 @@ fn run(menu: u32) {
             }
         }
         2 => {
-            println!("Hello 2");
+            a_001::func();
         }
         _ => {
             println!("default");

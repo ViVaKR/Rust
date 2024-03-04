@@ -12,3 +12,5 @@ description = "BootCamp Project"
 keywords = ["bootcamp", "beginner"]
 
 [dependencies]
+rand = "0.8.5"
+
