@@ -4,8 +4,17 @@ use std::io;
 use std::io::Write;
 use std::mem::size_of_val;
 
+/* HotKey
+   - `ctrl + alt + m`       : 메서드 추출
+   - `ctrl + alt + t`       : 코드 감싸기
+   - `alt + shift + enter`  : 함수 만들기
+   - `alt + shift + f`      : 코드 서식 자동 구성
+   - `alt + up/down`        : line up/down
+   - `cmd + shift + s`      : 모두 저장
+   - `ctrl + ` `             : 터미널
+*/
+
 // Entry Point : `main`
-//
 fn main() {
     // Rust code uses snake case as the conventional style for function and variable names.
 
@@ -59,12 +68,224 @@ fn main() {
             20 => _ = statement_expression(),
             21 => five_caller(),
             22 => control_flow(rand::thread_rng().gen_range(1..=100)),
+            23 => ownership(),
+            24 => slice_target(),
+            25 => struct_default(),
             _ => break,
         }
     }
+
+    /* 코멘트, Comment
+        - 컴파일러가 무시하지만 소스코드를 읽는 사람들이 유용하다고 생각할 수 있는 주석을 소스코드에 남기는 방법
+    */
 }
 
-// 제어흐름 (Control Flow) : if, loop
+/* [ 구조체 ]
+    - 데이터의 그룹화
+    - 의미 있는 그룹을 구성하는 여러 관련 값을 함께 패키지하고 이름을 지정할 수 있는
+    - 사용자 정의 데이터 유형
+    - 객체의 데이터 속성과 동일
+    - 튜플과 다른점 : 각 데이터 조각의 이름을 지정하여 값이 의미하는 바가 명확하여 더 유연함
+    - 키워드 : struct
+
+*/
+
+struct User {
+    // (25)
+    active: bool,
+    username: String,
+    email: String,
+    sign_in_count: u64,
+}
+
+fn struct_build(_active: bool, _username: String, _email: String, _sign_in_count: u64) -> User {
+    User {
+        active: _active,
+        username: _username,
+        email: _email,
+        sign_in_count: _sign_in_count,
+    }
+}
+fn struct_default() {
+    // (25)
+
+    let mut user = User {
+        active: true,
+        username: String::from("Viv"),
+        email: String::from("bm@live.co.kr"),
+        sign_in_count: 1,
+    };
+
+    user.email = String::from("admin@vivabj.com");
+
+    println!(
+        "User A -> {} {} {} {}",
+        user.active, user.username, user.email, user.sign_in_count
+    );
+
+    let userb = struct_build(
+        false,
+        String::from("Kim Bum Jun"),
+        String::from("iam@kimbumjun.com"),
+        9,
+    );
+    println!(
+        "User B -> {} {} {} {}",
+        userb.active, userb.username, userb.email, userb.sign_in_count
+    );
+}
+
+/* [ Slice ] */
+fn slice_target() {
+    // (24)
+    let mut s = String::from("Hello World");
+    let hello = &s[0..5];
+    let world = &s[6..11];
+    println!("{hello}, {world}");
+    let word = first_word_a(&s);
+    println!("first word -> {word}");
+
+    // let word = first_word(&s); // word will get the value 5
+    s.clear(); // this empties the String, making it equal to ""
+
+    // word still has the value 5 here, but there's no more string that
+    // we could meaningfully use the value 5 with. word is now totally invalid!
+
+    let s = String::from("hello");
+    let len = s.len();
+    let slice = &s[3..len];
+    println!("hello[3..len] -> {slice}");
+    let slice = &s[..];
+    println!("hello[..] -> {slice}");
+
+    let str_literal = "Hello, World";
+    let word = first_word_b(&str_literal);
+    println!("{word}");
+
+    let a = [1, 2, 3, 4, 5];
+    let sl = &a[1..3];
+    assert_eq!(sl, &[2, 3]);
+    println!("Success!");
+}
+
+fn first_word_b(s: &str) -> &str {
+    &s[0..7]
+}
+
+fn first_word_a(s: &String) -> &str {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+    &s[..]
+}
+
+/* 소유권 */
+fn ownership() {
+    /*
+       [ 메모리 관리 방식 ]
+       1. 정기적인 가비지 수집
+       2. 명시적인 메모리 할당 해제
+       3. 소유권 시스템을 통한 메모리 관리
+
+       [ 스택 ]
+       - 후입선출 (Last In First Out)
+       - 순서대로 값을 저장하고 반대 순서로 값을 제거함.
+       - 고정크기
+       - 컴파일시 크기를 알수 없거나 크기가 변경될 수 있는 데이터는 힙에 저장
+       - 힙에 대한 포인터는 알려진 고정 크기이므로 스택에 포인터를 자장할 수 있음.
+       - 힙에 공간을 할당할 때는 데이터를 보관할 만큼 큰 공간을 찾은 다음 할당하므로 다 많은 작업이 필요함.
+       - 힙의 데이터에 엑세스하려면 포인터를 따라야 하기 때문에 스택의 데이터에 엑세스하는 것보다 속도가 느림.
+       - 함수에 전달된 값(힙의 데이터에 대한 포인터 포함)과 함수의 지역변수는 스택에 푸시됨
+       - 함수가 끝나면 해당 값은 스택에서 제거됨.
+       - 코드의 어떤 부분이 힙의 어떤 데이터를 사용하고 있는지 추적하고, 합에서 중복 데이터의 양을 최소화 하고 공간이 부족하지 않도록 사용되지 않는 데이터를 정리하는 것이 모두 소유권이 해결하는 문제임.
+
+       [ 소유권 규칙 ]
+       1. Rust 의 각 값에는 소유자가 있음.
+       2. 한 번에 한명의 소유자만 있을 수 있다.
+       3. 소유자가 범위를 벗어나면 값이 삭제 됨.
+
+    */
+
+    // 변경가능한 문자열
+    let mut s = String::from("Hello");
+    s.push_str(", World!"); // push_str() appends a literal to a String
+    println!("{}", s); // This will print `Hello, World`
+
+    // 얕은 복사.
+
+    // 클론과 상호 작용하는 변수 및 데이터
+    // 깊은 복사
+    let s1 = String::from("fine");
+    let s2 = s1.clone();
+    // 얕은 복사
+    // let s3 = s1; // <- s1은 유효한 상태가 아니므로, 오류 발생함.
+    println!("s1 = {}, s2 = {}", s1, s2);
+
+    // 힙 얕은 복사 : 함수에 값을 전달하는 메커니즘은 변수에 값을 할당할 때와 유사함.
+    let owner = String::from("good"); // owner into scope
+    takes_ownership(owner); // owner value moves into the function
+                            // println!("{owner}");                     // and so is no longer valid here
+
+    // 스택 전용 복사 : 유효함.
+    let x = 5;
+    let y = x;
+
+    make_copy(x); // x copy to -> make_copy
+    println!("x = {}, y = {}", x, y); // so it's okay to still
+
+    // 반환 값과 범위
+    //-> 값을 반환하면 소유권ㅇ르 이전할 수도 있음.
+    let s1 = gives_ownership(); // gives_ownership moves its return
+    println!("gives_ownership : {s1}"); // value into s1
+
+    let s2 = String::from("hello"); // s2 is moved into takes_and_gives_back
+    let s3 = takes_and_gives_back(s2); // also moves its return value into s3
+    println!("{s3}");
+
+    // 튜플
+    let s4 = String::from("nice");
+    let (r1, len) = calculate_length(s4);
+    println!("The length of '{r1}' is {len}");
+
+    // 참조 -> `&`
+    let s6 = String::from("vivakr");
+    let len_s6 = calculate_length_ref(&s6); // 값을 소유하지 않는 &s6 참조, s6 는 삭제되지 않음.
+    println!("The length of '{s6}' is {len_s6}");
+} // 닫는 중괄호에서 메모리 반환이 자동 호출됨. (drop)
+
+// 변경가능한 참조 (
+// 불변형 참조 (reference)
+fn calculate_length_ref(s: &String) -> usize {
+    // s is a reference to a String
+    s.len()
+} // Here, s goes out of scope, But because it dows not have onwership of what it refers to, it is not droped. 그러나 참조 역시 불변이므로 참조한 내용을 수정하는 것은 허용되지 않음.
+fn calculate_length(s: String) -> (String, usize) {
+    let length = s.len(); // len() returns the length of a String
+    (s, length)
+}
+
+fn takes_and_gives_back(a_string: String) -> String {
+    a_string + ", world"
+}
+fn gives_ownership() -> String {
+    let some_string = String::from("yours");
+    some_string
+}
+// ownership (heap)
+fn takes_ownership(some_string: String) {
+    println!("{some_string}");
+} // some_string goes out of scope -> memory is freed.
+
+// ownership (stack)
+fn make_copy(some_integer: i32) {
+    println!("{some_integer}");
+} // some_integer goes out of scope -> Nothing special happens.
+
+/* 제어흐름 (Control Flow) : if, loop */
 fn control_flow(number: i32) {
     /*
          [ if statement ]
@@ -154,6 +375,7 @@ fn control_flow(number: i32) {
 fn statement_expression() -> i32 {
     /*
         [ Statements (명령문) & Expressions (표현식) ]
+
         1. statements (명령문) : 어떤 동작을 수행하고 값을 반환하지 않는 명령.
             -> 명령문 : 결과값을 반환하지 않음
             -> (오류) -> `let x = (let y = 6);`
@@ -164,20 +386,42 @@ fn statement_expression() -> i32 {
             -> 결과 값으로 평가합니다.
             -> 중괄호로 만든 새 범위 블록은 표현식입니다.
             -> 함수호출 매크로 호출은 표현식입니다.
+
+        함수는 선택적으로 표현식으로 끝나는 일련의 문장으로 구성되어 있다.
+        러스트는 표현 기반 언어
+
+        - statement (구문, 명령문) : 일부 작업을 수행하고 값을 반환하지 않는다. (let y = 6 ),
+            함수의 정의도 구문이다.
+            다른 변수에 할당할 수 없음
+            다른 언어는 할당이 할당값을 반환하는 다른 언어와 다른점이 다. (x = y = 6, Rust 에서는 안됨)
+
+        - express (표현) : 결과 값으로 평가됨
+            함수를 호출하는 것은 표현식
+            중괄호로 만든 새 범위 블록은 표현식임
     */
 
+    let number = rand::thread_rng().gen_range(1..=100);
+    let odd_even = if number % 2 == 0 { "even" } else { "odd" };
+
+    println!("{number} : {odd_even}");
+
+    // Expression (표현식)
     let y = {
         let x = 3;
         x + 1 // semicolon 이 없음에 유의.
     };
 
+    // 함수 호출 -> 표현식
     println!("{}", y);
 
     y * 128 // 세미콜론이 없는 표현식, 반환값.
 }
 
 // 값을 반환하는 함수.
+
 fn five() -> i32 {
+    // return 키워드를 사용하여 값을 지정하면 조기에 반환할 수 있지만
+    // 대부분의 함수는 마지막 표현식을 암시적으로 반환 함
     5 // return value, expression
 }
 fn plus_one(x: i32) -> i32 {
