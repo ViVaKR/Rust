@@ -1,4 +1,5 @@
 use rand::Rng;
+use std::any::Any;
 use std::cmp::Ordering;
 use std::io;
 use std::io::Write;
@@ -70,7 +71,7 @@ fn main() {
             22 => control_flow(rand::thread_rng().gen_range(1..=100)),
             23 => ownership(),
             24 => slice_target(),
-            25 => struct_default(),
+            25 => struct_runner(),
             _ => break,
         }
     }
@@ -79,7 +80,62 @@ fn main() {
         - 컴파일러가 무시하지만 소스코드를 읽는 사람들이 유용하다고 생각할 수 있는 주석을 소스코드에 남기는 방법
     */
 }
+/* [ 열거형 ]
+    -
 
+*/
+
+enum IpAddrKind {
+    V4,
+    V6,
+}
+
+enum IpKindAddr {
+    V4(String),
+    V6(String),
+}
+
+enum IpKindAddress {
+    V4(u8, u8, u8, u8),
+    V6(String),
+}
+
+enum Message {
+    Quit,                       // 관련된 데이터 없음
+    Move { x: i32, y: i32 },    // 구조체 처럼 필드 이름을 지정
+    Write(String),              // String 하나 포함.
+    ChangeColor(i32, i32, i32), // 3개의 값을 포함.
+}
+
+/* [ 위 열겨형을 구조체로 정의 ]
+    struct QuitMessage;
+    struct MoveMessage { x:i32, y:i32}
+    struct WriteMessage(String); // tuple struct
+    struct ChangeColorMessage(i32, i32, i32); // tuple struct
+*/
+struct IpAddr {
+    kind: IpAddrKind,
+    address: String,
+}
+
+fn enum_start() {
+    let home = IpAddr {
+        kind: IpAddrKind::V4,
+        address: String::from("127.0.0.1"),
+    };
+
+    let home = IpKindAddr::V4(String::from("127.0.0.1"));
+
+    let home = IpKindAddress::V4(127, 0, 0, 1);
+
+    let loopback = IpKindAddress {
+        kind: IpAddrKind::V6,
+        address: String::from("::1"),
+    };
+
+    let loopback = IpKindAddr::V6(String::from("::1"));
+    let loopback = IpKindAddress::V6(String::from("::1"));
+}
 /* [ 구조체 ]
     - 데이터의 그룹화
     - 의미 있는 그룹을 구성하는 여러 관련 값을 함께 패키지하고 이름을 지정할 수 있는
@@ -98,6 +154,41 @@ struct User {
     sign_in_count: u64,
 }
 
+// 튜플 구조체
+struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+// 필드가 없는 단위형 구조체 (단위 유사 구조체)
+// 유형 자체에 저장하려는 데이터가 없을 때 유용함
+struct AlwaysEqual;
+
+/* 메소드 (Method)
+    -- 함수와 유사함.
+    - 매개변수와 반환값을 가질 수 있음
+    - 구조체의 컨텍스트 내에서 정의되며 첫번째 매개변순는 항상 self 구조체의 인스턴스를 나타냄
+    -
+*/
+
+impl Rectangle {
+    // 메소드
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+
+    fn width(&self) -> bool {
+        self.width > 0
+    }
+
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
+    }
+}
+
 fn struct_build(_active: bool, _username: String, _email: String, _sign_in_count: u64) -> User {
     User {
         active: _active,
@@ -106,7 +197,7 @@ fn struct_build(_active: bool, _username: String, _email: String, _sign_in_count
         sign_in_count: _sign_in_count,
     }
 }
-fn struct_default() {
+fn struct_runner() {
     // (25)
 
     let mut user = User {
@@ -129,12 +220,86 @@ fn struct_default() {
         String::from("iam@kimbumjun.com"),
         9,
     );
+
     println!(
         "User B -> {} {} {} {}",
         userb.active, userb.username, userb.email, userb.sign_in_count
     );
+
+    // 튜플 구조체
+    let color = Color(125, 125, 125);
+    let point = Point(100, 100, 100);
+
+    println!(
+        "Color => {} {} {}, {} {} {}",
+        color.0, color.1, color.2, point.0, point.1, point.2
+    );
+
+    let subject = AlwaysEqual;
+    println!("{:?}", subject.type_id());
+
+    // Rectangle
+    let rect = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    let rect_tup = (30, 50);
+    println!(
+        "The area of the rectangle is {} square pixels (tupple)",
+        area_tup(rect_tup)
+    );
+    println!(
+        "The area of the rectangle is {} squar pixels. (struct)",
+        area_struct(&rect)
+    );
+
+    // Struct 의 모든 필드의 값 보기
+    //-> rect = Rectangle { width: 30, height: 50 }
+    println!("rect = {:?}", rect);
+    let scale = 2;
+
+    // view debug info
+    // 코드가 수행하는 작업을 파악할때 유용함.
+    let rect2 = Rectangle {
+        width: dbg!(30 * scale),
+        height: 50,
+    };
+
+    dbg!(&rect2);
+
+    // Method
+    println!(
+        "The area of the rectangle is {} square pixels.\nwidth is gt 0 ? = {} (Method)",
+        rect.area(),
+        rect.width()
+    );
+
+    let r1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+    let r2 = Rectangle {
+        width: 10,
+        height: 40,
+    };
+
+    let r3 = Rectangle {
+        width: 60,
+        height: 45,
+    };
+
+    println!("Can r1 hold r2? {}", r1.can_hold(&r2));
+    println!("Can r1 hold r2? {}", r1.can_hold(&r3));
 }
 
+fn area_struct(rect: &Rectangle) -> u32 {
+    rect.width * rect.height
+}
+
+fn area_tup(demensions: (u32, u32)) -> u32 {
+    demensions.0 * demensions.1
+}
 /* [ Slice ] */
 fn slice_target() {
     // (24)
