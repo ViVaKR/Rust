@@ -1,84 +1,206 @@
-use rand::Rng;
+#![allow(unused)]
+
+use rand::Rng; // (5)
 use std::any::Any;
-use std::cmp::Ordering;
-use std::io;
-use std::io::Write;
-use std::mem::size_of_val;
+use std::cmp::Ordering; // (4)
+use std::fs::File;
+use std::io; //  (1)
+use std::io::{BufRead, BufReader, ErrorKind, Write}; // (2)
+use std::mem::size_of_val; // (3)
 
 /* HotKey
    - `ctrl + alt + m`       : 메서드 추출
    - `ctrl + alt + t`       : 코드 감싸기
    - `alt + shift + enter`  : 함수 만들기
    - `alt + shift + f`      : 코드 서식 자동 구성
-   - `alt + up/down`        : line up/down
+   - `alt + up/down`        : line up/down1
    - `cmd + shift + s`      : 모두 저장
    - `ctrl + ` `             : 터미널
 */
+// (1) ==================================================================================
 
-// Entry Point : `main`
-fn main() {
-    // Rust code uses snake case as the conventional style for function and variable names.
+fn example_2() {
+    // 변수
+    const ONE_MIL: u32 = 1_000_000;
+    const PI: f64 = std::f64::consts::PI;
+    // 같은 이름의 다른 형식의 변수 선언 가능
+    // 쉐도잉
+    let age = "47";
+    let mut age: u32 = age.trim().parse().expect("Age was't assigned a number");
+    age = age + 1;
+    println!("I'm {} and I want ${}", age, ONE_MIL);
+}
 
-    let mut input = String::new();
+fn example_max_values() {
+    println!("Max u8 : {}", u8::MAX);
+    println!("Max u16 : {}", u16::MAX);
+    println!("Max u32 : {}", u32::MAX);
+    println!("Max u64 : {}", u64::MAX);
+    println!("Max usize : {}", usize::MAX);
+    println!("Max u64 : {}", u64::MAX);
+    println!("Max f32 : {}", f32::MAX);
+    println!("Max f64 : {}", f64::MAX);
+}
 
-    loop {
-        println!("Select Menu (1 ~ 100, Exit: 0)");
-        print!(">> ");
-        io::stdout().flush().unwrap();
-        input.clear();
-        let mut choice: u32 = 0;
-        let b = io::stdin().read_line(&mut input).expect("Not integer");
-        println!("Input {}, Size: {}", choice, b);
+fn random_number() {
+    // Random
+    let random_num = rand::thread_rng().gen_range(1..101);
+    println!("Random : {}", random_num);
+}
+fn example_numbers() {
+    let is_true = true;
+    let my_grade = 'A'; // char
+    let num_f32: f32 = 1.111111111111111;
+    let num_f64: f64 = 1.111111111111111;
 
-        if let Ok(val) = input.trim().parse::<u32>() {
-            choice = val;
-        } else {
-            println!("Please enter a valid number.");
-            continue;
-        }
+    // 정밀도 차이
+    println!("f32 : {}", num_f32 + 0.111111111111111); // 1.2222223
+    println!("f64 : {}", num_f64 + 0.111111111111111); // 1.2222222222222219
 
-        match choice {
-            0 => {
-                println!("=== 프로그램을 종료합니다. ===");
-                return;
-            }
-            1 => size_of('H', '글'),
-            2 => println!("Hello, World!"),
-            3 => println!("Three"),
-            4 => data_type(),
-            5 => println!("{}", add(25, 35)),
-            6 => expr(),
-            7 => expr_exercies(),
-            8 => {
-                let (x, y) = (1, 2);
-                let s = sum(x, y); // 3
-                assert_eq!(s, 3);
-                println!("Success!");
-            }
-            9 => while_statement(10),
-            10 => matches_fn(),
-            11 => var_01(),
-            12 => var_02(),
-            13 => data_types_01(),
-            14 => loop_statement(10),
-            15 => user_input(),
-            16 => arithmethic(),
-            17 => condition(),
-            18 => guess_game(),
-            19 => shadowing(),
-            20 => _ = statement_expression(),
-            21 => five_caller(),
-            22 => control_flow(rand::thread_rng().gen_range(1..=100)),
-            23 => ownership(),
-            24 => slice_target(),
-            25 => struct_runner(),
-            _ => break,
-        }
+    let mut num_3: u32 = 5;
+    let num_4: u32 = 4;
+
+    // Operator
+    println!("5 + 4 = {}", num_3 + num_4);
+    println!("5 - 4 = {}", num_3 - num_4);
+    println!("5 * 4 = {}", num_3 * num_4);
+    println!("5 / 4 = {}", num_3 / num_4);
+    println!("5 % 4 = {}", num_3 % num_4);
+}
+fn if_statement() {
+    let age = 8;
+    if age >= 1 && age <= 18 {
+        //
+        println!("You ar nice days...");
+    } else if (age == 21 || age == 50) {
+        //
+        println!("21 or 50 years old");
+    } else if age >= 65 {
+        //
+        println!("65 over ...");
+    } else {
+        //
+        println!("Not a Important");
     }
 
-    /* 코멘트, Comment
-        - 컴파일러가 무시하지만 소스코드를 읽는 사람들이 유용하다고 생각할 수 있는 주석을 소스코드에 남기는 방법
-    */
+    let mut my_age = 47;
+
+    let can_vote = if my_age > 18 { true } else { false };
+
+    println!("Can Vote : {}", can_vote);
+}
+
+fn match_statement(age: i32) {
+    match age {
+        1..=18 => println!("You are 1..18 years old"),
+        21 | 50 => println!("You are 21 or 50 years old"),
+        19..=64 => println!("You are very important human"),
+        65.. => println!("You are old man!"),
+        _ => println!("You are Unknow human.."),
+    };
+
+    let voting_age = 18;
+    match age.cmp(&voting_age) {
+        Ordering::Less => println!("Can't Vote"),
+        Ordering::Greater => println!("Can Vote"),
+        Ordering::Equal => println!("You gained the right to vote"),
+        _ => println!("Unknown is can Vote"),
+    }
+}
+
+fn loops_ex() {
+    let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    println!("1st : {}, length : {}", arr[0], arr.len());
+
+    let mut loop_idx = 0;
+    loop {
+        if (arr[loop_idx] % 2 == 0) {
+            loop_idx += 1;
+            continue;
+        }
+        if arr[loop_idx] == 9 {
+            break;
+        }
+        println!("Array Odd Number : {} value -> {}", loop_idx, arr[loop_idx]);
+
+        loop_idx += 1;
+    }
+
+    loop_idx = 0;
+    while loop_idx < arr.len() {
+        println!("while loop => {}", arr[loop_idx]);
+        loop_idx += 1;
+    }
+
+    for val in arr {
+        println!("for loop -> {}", val);
+    }
+}
+
+fn tuple_ex() {
+    let my_tuple: (u8, String, f64) = (47, "Viv".to_string(), 50_000_000.458);
+    println!(
+        "Age : {}, Name : {}, Money : {}",
+        my_tuple.0, my_tuple.1, my_tuple.2
+    );
+
+    let (age, name, money) = my_tuple;
+    println!("{} {} {}", age, name, money);
+}
+
+fn string_ex() {
+    let mut str1 = String::new();
+    str1.push('A');
+    str1.push_str(" B C D E F Hello World");
+
+    println!("{str1}");
+
+    for word in str1.split_whitespace() {
+        println!("Splited String : {word}");
+    }
+
+    // Replace
+    let str2 = str1.replace("D", "Z");
+    println!("{}", str2);
+
+    // 문자열 정렬
+    let random_text = String::from("x r t b h k z a m c");
+    let mut v1: Vec<char> = random_text.chars().collect();
+    v1.sort();
+    v1.dedup();
+    for char in v1 {
+        println!("{}", char);
+    }
+
+    let str4: &str = "Random String";
+    let mut str5: String = str4.to_string();
+    println!("{}", str5);
+
+    let byte_arr1 = str5.as_bytes();
+    let str6 = &str5[0..6];
+    println!("String length : {}", str6.len());
+
+    str5.clear();
+
+    // string print unicode
+    let str7: String = String::from("Just some");
+    let str8: String = String::from(" words 123456");
+    let str9: String = str7 + &str8;
+    for char in str9.bytes() {
+        println!("{}", char);
+    }
+}
+
+fn example_1() {
+    // 빈 문자열 반환.
+    let mut name = String::new();
+    let greeting = "Nice to meet you";
+
+    println!("What's Your name? :  ");
+    io::stdin()
+        .read_line(&mut name)
+        .expect("Didn't Receive Input");
+    println!("Hello {} {}", name.trim_end(), greeting);
 }
 /* [ 열거형 ]
     -
@@ -113,29 +235,7 @@ enum Message {
     struct WriteMessage(String); // tuple struct
     struct ChangeColorMessage(i32, i32, i32); // tuple struct
 */
-struct IpAddr {
-    kind: IpAddrKind,
-    address: String,
-}
 
-fn enum_start() {
-    let home = IpAddr {
-        kind: IpAddrKind::V4,
-        address: String::from("127.0.0.1"),
-    };
-
-    let home = IpKindAddr::V4(String::from("127.0.0.1"));
-
-    let home = IpKindAddress::V4(127, 0, 0, 1);
-
-    let loopback = IpKindAddress {
-        kind: IpAddrKind::V6,
-        address: String::from("::1"),
-    };
-
-    let loopback = IpKindAddr::V6(String::from("::1"));
-    let loopback = IpKindAddress::V6(String::from("::1"));
-}
 /* [ 구조체 ]
     - 데이터의 그룹화
     - 의미 있는 그룹을 구성하는 여러 관련 값을 함께 패키지하고 이름을 지정할 수 있는
@@ -813,9 +913,6 @@ fn data_type() {
     // 스칼라 , 혼합형
     // (1) 스칼라 : 4가지 유형의 기본 스칼라 유형을 가짐
     //-> Integer, Float, Boolean, String
-    //-
-
-    // Basic Types Recap //
 
     let two = 2;
     let hello = "hello";
@@ -916,4 +1013,80 @@ fn expr_exercies() {
         x
     };
     println!("{}", a);
+}
+
+fn main() {
+    // example_1();
+    // example_2();
+    // example_max_values();
+    // if_statement();
+    // random_number();
+    // example_numbers();
+    // match_statement(18);
+    // loops_ex();
+    // tuple_ex();
+
+    string_ex();
+
+    let mut input = String::new();
+    loop {
+        println!("Select Menu (1 ~ 100, Exit: 0)");
+        print!(">> ");
+        io::stdout().flush().unwrap();
+        input.clear();
+        let mut choice: u32 = 0;
+        let b = io::stdin().read_line(&mut input).expect("Not integer");
+        println!("Input {}, Size: {}", choice, b);
+
+        if let Ok(val) = input.trim().parse::<u32>() {
+            choice = val;
+        } else {
+            println!("Please enter a valid number.");
+            continue;
+        }
+
+        match choice {
+            0 => {
+                println!("=== 프로그램을 종료합니다. ===");
+                return;
+            }
+            1 => size_of('H', '글'),
+            2 => {
+                println!("What is your name?");
+            }
+            3 => println!("Three"),
+            4 => data_type(),
+            5 => println!("{}", add(25, 35)),
+            6 => expr(),
+            7 => expr_exercies(),
+            8 => {
+                let (x, y) = (1, 2);
+                let s = sum(x, y); // 3
+                assert_eq!(s, 3);
+                println!("Success!");
+            }
+            9 => while_statement(10),
+            10 => matches_fn(),
+            11 => var_01(),
+            12 => var_02(),
+            13 => data_types_01(),
+            14 => loop_statement(10),
+            15 => user_input(),
+            16 => arithmethic(),
+            17 => condition(),
+            18 => guess_game(),
+            19 => shadowing(),
+            20 => _ = statement_expression(),
+            21 => five_caller(),
+            22 => control_flow(rand::thread_rng().gen_range(1..=100)),
+            23 => ownership(),
+            24 => slice_target(),
+            25 => struct_runner(),
+            _ => break,
+        }
+    }
+
+    /* 코멘트, Comment
+        - 컴파일러가 무시하지만 소스코드를 읽는 사람들이 유용하다고 생각할 수 있는 주석을 소스코드에 남기는 방법
+    */
 }
