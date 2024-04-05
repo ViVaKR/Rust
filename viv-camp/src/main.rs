@@ -2,10 +2,13 @@
 
 use rand::Rng; // (5)
 use std::any::Any;
-use std::cmp::Ordering; // (4)
+use std::cmp::Ordering;
+use std::convert::identity;
+// (4)
 use std::fs::File;
 use std::io; //  (1)
-use std::io::{BufRead, BufReader, ErrorKind, Write}; // (2)
+use std::io::Write;
+use std::io::{BufRead, BufReader, ErrorKind}; // (2)
 use std::mem::size_of_val; // (3)
 
 /* HotKey
@@ -47,7 +50,7 @@ fn random_number() {
     let random_num = rand::thread_rng().gen_range(1..101);
     println!("Random : {}", random_num);
 }
-fn example_numbers() {
+fn number_types() {
     let is_true = true;
     let my_grade = 'A'; // char
     let num_f32: f32 = 1.111111111111111;
@@ -191,7 +194,7 @@ fn string_ex() {
     }
 }
 
-fn example_1() {
+fn stdin_readline() {
     // 빈 문자열 반환.
     let mut name = String::new();
     let greeting = "Nice to meet you";
@@ -875,29 +878,28 @@ fn matches_fn() {
 // ( macros ) //
 // panic!() or
 // unimplemented!() or
-
-fn sum(x: i32, y: i32) -> i32 {
-    // (8)
-    x + y
-    // 쎄미 콜론 이 있으면 반환 값이 없이 끝남.
-    // 리턴 타입은 쌔미 콜론을 넣지 않음.
-}
-
 fn size_of(c1: char, c2: char) {
     println!("{:?}", size_of_val(&c1));
     println!("{:?}", size_of_val(&c2));
 }
-fn loop_statement(mut a: i32) {
+
+// loop statement
+fn loop_ex(mut a: i32) {
+    println!("Start");
     loop {
-        if a == 100 {
+        println!("{:09}", a);
+        a = a + 1;
+        if a == 20 {
             break;
         }
-        a = a + 1;
     }
+    println!("Done");
 }
+
+// (9) while statement
 fn while_statement(mut a: i32) {
-    while a != 5 {
-        println!("{:?}", a);
+    while a < 10 {
+        println!("{:#08b}", a);
         a = a + 1;
     }
 }
@@ -1015,18 +1017,195 @@ fn expr_exercies() {
     println!("{}", a);
 }
 
-fn main() {
-    // example_1();
-    // example_2();
-    // example_max_values();
-    // if_statement();
-    // random_number();
-    // example_numbers();
-    // match_statement(18);
-    // loops_ex();
-    // tuple_ex();
+fn casting_ex() {
+    let int_u8 = 5;
+    let int_u8 = 4;
 
-    string_ex();
+    let int_u32 = (int_u8 as u32) + (int_u8 as u32);
+    enum Day {
+        Monday,
+        Tuesday,
+        Wednesday,
+        Thursday,
+        Friday,
+        Saterday,
+        Sunday,
+    }
+
+    impl Day {
+        fn is_weekend(&self) -> bool {
+            match self {
+                Day::Saterday | Day::Sunday => true,
+                _ => false,
+            }
+        }
+    }
+
+    let today: Day = Day::Monday;
+
+    match today {
+        Day::Monday => println!("Everyone hates Monday"),
+        Day::Tuesday => {
+            println!("Donut day")
+        }
+        Day::Wednesday => {
+            println!("Hump day")
+        }
+        Day::Thursday => {
+            println!("Pay day")
+        }
+        Day::Friday => {
+            println!("Almost Weekend")
+        }
+        Day::Saterday => {
+            println!("Weekend")
+        }
+        Day::Sunday => {
+            println!("Weekend")
+        }
+    }
+
+    println!("Is today the weekend ( {} )", today.is_weekend());
+}
+
+fn vector_ex() {
+    // 벡터 : 배열과 유사함.
+    // 동일한 유형만 저장 가능.
+
+    let vec1: Vec<i32> = Vec::new();
+    let mut vec2: Vec<i32> = vec![1, 2, 3, 4, 5, 6];
+    vec2.push(7);
+    println!("1st : {}", vec2[0]);
+    let second: &i32 = &vec2[1];
+    match vec2.get(1) {
+        None => {
+            println!("No 2nd value")
+        }
+        Some(second) => {
+            println!("2nd : {}", second)
+        }
+    }
+
+    // 순환
+    for i in &mut vec2 {
+        *i *= 2;
+    }
+    println!("Vector length {}", vec2.len());
+    for j in &vec2 {
+        println!("{}", j);
+    }
+    println!("Pop : {:?}", vec2.pop());
+    for j in &vec2 {
+        println!("{}", j);
+    }
+}
+
+// Topic: Basic arithmetic
+fn sum(x: i32, y: i32) -> i32 {
+    // (8)
+    x + y
+    // 쎄미 콜론 이 있으면 반환 값이 없이 끝남.
+    // 리턴 타입은 쌔미 콜론을 넣지 않음.
+}
+
+fn sub(a: i32, b: i32) -> i32 {
+    a - b
+}
+
+fn display_result(result: i32) {
+    let people = "Rustaceans";
+    let temp = format!("Hello {people}!");
+    let temp2 = format!("{:#?}", (100, 200));
+
+    println!("{:010}, {}, {}", result, temp, temp2);
+}
+
+fn function_ex() {
+    println!("{} - {} = {}", 8, 4, sub(8, 4));
+
+    // 위치 매개 변수
+    println!("{3} {2} {1} {0}", 1, 2, 3, 4);
+
+    let rem = 6 % 3;
+    let rem2 = 6 % 4;
+    display_result(rem + rem2);
+}
+
+/*
+    [ 매크로 ]
+    -> 재사용 가능한 코드 덩어리를 정의하는 방법.
+    -> 함수와 유사 하지만 값을 생성하는 대신 코드를 생성함.
+    -> 컴파일 타임에 평가되므로 보다 효율적인 코드를 생성할 수 있음을 의미.
+
+*/
+
+macro_rules! say_hello {
+    () => {
+        println!("Hello, World")
+    };
+}
+
+macro_rules! create_function {
+    ($func_name:ident) => {
+        fn $func_name() {
+            println!("You called {:?}()", stringify!($func_name))
+        }
+    };
+}
+
+fn clear_screen() {
+    // print!("{}[2J", 27 as char); // clear screen
+    print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
+}
+
+fn menus(menu: &str) {
+    println!("{}", menu);
+}
+
+enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
+//
+fn enum_ex(go: Direction) {
+    let direction = match go {
+        Direction::Up => "up",
+        Direction::Down => "donw",
+        Direction::Left => "left",
+        Direction::Right => "right",
+    };
+    println!("Go To The {}", direction);
+    print!("Hello {}!", "world");
+}
+
+//
+fn write_ex() {
+    let mut w = Vec::new();
+    write!(&mut w, "Hello {}!", "World");
+
+    for char in w {
+        println!("{}", char);
+    }
+}
+
+fn main() {
+    menus("26. random number");
+    menus("27. if statement");
+    menus("28. number types");
+    menus("29. match statement");
+    menus("30. loop statement");
+    menus("31. tuple");
+    menus("32. string");
+    menus("33. casting");
+    menus("34. enum");
+    menus("35. say_hello!");
+    menus("36. write!");
+    menus("37. vector_ex");
+    menus("38. example_2");
+    menus("39. example_max_value");
 
     let mut input = String::new();
     loop {
@@ -1044,7 +1223,7 @@ fn main() {
             println!("Please enter a valid number.");
             continue;
         }
-
+        clear_screen();
         match choice {
             0 => {
                 println!("=== 프로그램을 종료합니다. ===");
@@ -1065,12 +1244,12 @@ fn main() {
                 assert_eq!(s, 3);
                 println!("Success!");
             }
-            9 => while_statement(10),
+            9 => while_statement(1),
             10 => matches_fn(),
             11 => var_01(),
             12 => var_02(),
             13 => data_types_01(),
-            14 => loop_statement(10),
+            14 => loop_ex(10),
             15 => user_input(),
             16 => arithmethic(),
             17 => condition(),
@@ -1082,11 +1261,22 @@ fn main() {
             23 => ownership(),
             24 => slice_target(),
             25 => struct_runner(),
+
+            26 => random_number(),
+            27 => if_statement(),
+            28 => number_types(),
+            29 => match_statement(18),
+            30 => loops_ex(),
+            31 => tuple_ex(),
+            32 => string_ex(),
+            33 => casting_ex(),
+            34 => enum_ex(Direction::Left),
+            35 => say_hello!(), // macros
+            36 => write_ex(),
+            37 => vector_ex(),
+            38 => example_2(),
+            39 => example_max_values(),
             _ => break,
         }
     }
-
-    /* 코멘트, Comment
-        - 컴파일러가 무시하지만 소스코드를 읽는 사람들이 유용하다고 생각할 수 있는 주석을 소스코드에 남기는 방법
-    */
 }
