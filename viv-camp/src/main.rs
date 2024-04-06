@@ -1158,10 +1158,6 @@ fn clear_screen() {
     print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
 }
 
-fn menus(menu: &str) {
-    println!("{}", menu);
-}
-
 enum Direction {
     Up,
     Down,
@@ -1192,20 +1188,7 @@ fn write_ex() {
 }
 
 fn main() {
-    menus("26. random number");
-    menus("27. if statement");
-    menus("28. number types");
-    menus("29. match statement");
-    menus("30. loop statement");
-    menus("31. tuple");
-    menus("32. string");
-    menus("33. casting");
-    menus("34. enum");
-    menus("35. say_hello!");
-    menus("36. write!");
-    menus("37. vector_ex");
-    menus("38. example_2");
-    menus("39. example_max_value");
+    menus("-");
 
     let mut input = String::new();
     loop {
@@ -1279,4 +1262,23 @@ fn main() {
             _ => break,
         }
     }
+}
+fn menu_items() {
+    menus("26. random number");
+    menus("27. if statement");
+    menus("28. number types");
+    menus("29. match statement");
+    menus("30. loop statement");
+    menus("31. tuple");
+    menus("32. string");
+    menus("33. casting");
+    menus("34. enum");
+    menus("35. say_hello!");
+    menus("36. write!");
+    menus("37. vector_ex");
+    menus("38. example_2");
+    menus("39. example_max_value");
+}
+fn menus(menu: &str) {
+    println!("{}", menu);
 }
