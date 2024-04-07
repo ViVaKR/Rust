@@ -20,30 +20,6 @@ use std::mem::size_of_val; // (3)
    - `cmd + shift + s`      : 모두 저장
    - `ctrl + ` `             : 터미널
 */
-// (1) ==================================================================================
-
-fn example_2() {
-    // 변수
-    const ONE_MIL: u32 = 1_000_000;
-    const PI: f64 = std::f64::consts::PI;
-    // 같은 이름의 다른 형식의 변수 선언 가능
-    // 쉐도잉
-    let age = "47";
-    let mut age: u32 = age.trim().parse().expect("Age was't assigned a number");
-    age = age + 1;
-    println!("I'm {} and I want ${}", age, ONE_MIL);
-}
-
-fn example_max_values() {
-    println!("Max u8 : {}", u8::MAX);
-    println!("Max u16 : {}", u16::MAX);
-    println!("Max u32 : {}", u32::MAX);
-    println!("Max u64 : {}", u64::MAX);
-    println!("Max usize : {}", usize::MAX);
-    println!("Max u64 : {}", u64::MAX);
-    println!("Max f32 : {}", f32::MAX);
-    println!("Max f64 : {}", f64::MAX);
-}
 
 fn random_number() {
     // Random
@@ -1108,27 +1084,12 @@ fn sum(x: i32, y: i32) -> i32 {
     // 리턴 타입은 쌔미 콜론을 넣지 않음.
 }
 
-fn sub(a: i32, b: i32) -> i32 {
-    a - b
-}
-
 fn display_result(result: i32) {
     let people = "Rustaceans";
     let temp = format!("Hello {people}!");
     let temp2 = format!("{:#?}", (100, 200));
 
     println!("{:010}, {}, {}", result, temp, temp2);
-}
-
-fn function_ex() {
-    println!("{} - {} = {}", 8, 4, sub(8, 4));
-
-    // 위치 매개 변수
-    println!("{3} {2} {1} {0}", 1, 2, 3, 4);
-
-    let rem = 6 % 3;
-    let rem2 = 6 % 4;
-    display_result(rem + rem2);
 }
 
 /*
@@ -1186,9 +1147,33 @@ fn write_ex() {
         println!("{}", char);
     }
 }
+fn menu_items() {
+    clear_screen();
+    menus("26. random number");
+    menus("27. if statement");
+    menus("28. number types");
+    menus("29. match statement");
+    menus("30. loop statement");
+    menus("31. tuple");
+    menus("32. string");
+    menus("33. casting");
+    menus("34. enum");
+    menus("35. say_hello!");
+    menus("36. write!");
+    menus("37. vector_ex");
+    menus("38. variables");
+    menus("39. variables");
+    menus("40. ownership");
+    menus("41. function");
+    menus("42. reference");
+    menus("43. slice");
+}
+fn menus(menu: &str) {
+    println!("{}", menu);
+}
 
 fn main() {
-    menus("-");
+    menu_items();
 
     let mut input = String::new();
     loop {
@@ -1198,7 +1183,6 @@ fn main() {
         input.clear();
         let mut choice: u32 = 0;
         let b = io::stdin().read_line(&mut input).expect("Not integer");
-        println!("Input {}, Size: {}", choice, b);
 
         if let Ok(val) = input.trim().parse::<u32>() {
             choice = val;
@@ -1206,10 +1190,10 @@ fn main() {
             println!("Please enter a valid number.");
             continue;
         }
-        clear_screen();
+
         match choice {
             0 => {
-                println!("=== 프로그램을 종료합니다. ===");
+                clear_screen();
                 return;
             }
             1 => size_of('H', '글'),
@@ -1257,28 +1241,323 @@ fn main() {
             35 => say_hello!(), // macros
             36 => write_ex(),
             37 => vector_ex(),
-            38 => example_2(),
-            39 => example_max_values(),
+            38 => {
+                // TODO
+            }
+            39 => variables(),
+            40 => {
+                // ownership
+                let s1 = String::from("Hello, World");
+                let (s2, len) = calculate_length(s1);
+                println!("{} - {}", s2, len);
+            }
+            41 => {
+                // function
+                function();
+            }
+            42 => {
+                // 참조
+                let mut s1 = String::from("Hello");
+                // `&` : 참조자, 앰퍼센드 기호
+                // 참조자는 어떤값의 소유권을 가져오지 않고 해당 값을 참조할 수 있도록 해줌.
+                // `*` : 역참조, & 참조의 반대
+                // `&s1` : s1을 참조 하지만 해당 값을 소유하지 않는 참조자를 생성함.
+                // `&mut s1` : 가변 참조자
+
+                // 가변 참조자는 1개 이상 중복하여 만들수 없으나, 중괄호로 새로운 스코프를 만들면 가능함.
+                let mut s2 = String::from("World");
+
+                {
+                    let mut r1 = &mut s2;
+                    r1.push_str(" inside");
+                    println!("inside {}", r1);
+                }
+                let r2 = &mut s2;
+                println!("outside {}", r2);
+
+                // (1) 데이터 경합을 방지함.(data race)
+                // (2) 둘 이상의표인터가 동시에 같은 데이터에 접근 방지
+                // (3) 포인터 중 하나 이상이 데이터에 쓰기 작업을 시행 방지
+                // (4) 데이터 접근 동기화 메커니즘이 없음
+                let len = reference(&mut s1);
+                println!("참조자 : {}, length = ( {} )", s1, len);
+
+                let mut str = String::from("Hi");
+                let t1 = &str;
+                let t2 = &str;
+                println!("ref {} {} {}", str, t1, t2);
+                // 이지점 부터는 t1, t2 는 사용되지 않음.
+
+                // &mut str 사용가능해짐.
+                let t3 = &mut str;
+                println!("enable mut {}", t3);
+
+                // [ dangling pointer ]
+                // 어떤 메모리를 가리키는 포인터가 남아 있는 상황에서
+                // 일부 메모리를 해제해 버림으로써, 다른 개체가 할당 받았을 지도 모르는 메모리를 참조하게 된 포인터.
+                // 러스트에서는 참조자를 만들면,
+                // 해당 참자가 스코프를 벗어나기 전에 데이터가 먼저 스코프를 벗어나는지 컴파일러에서 확인하여
+                // 댕글링 참조가 생성되지 않도록 보장함.
+                /* (dangle example)
+                    fn main() {
+                        let reference_to_nothing = dangle();
+                    }
+                    fn dangle() -> &String {  // dangle 은 String 참조자를 반환함.
+                        let s = String::from("hello"); // s 는 새로운 String 입니다.
+                        &s // String s 의 참조자를 반환함.
+                    } // 여기서 s 는 스코프 밖으로 벗어나고 버려집니다. 해당 메모리는 해제 됨으로
+                      // 위험해집니다. !!
+
+                    따라서 이런 경우에는
+                    &s 대신
+                    s  로 직접반환해야 합니다.
+                */
+
+                // [ 참조자 규칙 ]
+                // 단 하난의 가변 참조자만 갖거나, 여러개의 불변 참조자를 가질 수 있음.
+                // 참조자는 항상 유효해야 합니다.
+            } // 참조, reference
+            43 => {
+                // 문자열 슬라이스, slice
+                // `&str` : 문자열 슬라이스를 나타내는 타입
+                // String 의 일부를 가리키는 참조자를 말함.
+
+                let mut s = String::from("Hello World");
+                let len = s.len();
+                let hello = &s[..5]; // 0부터 시작일 때는 생략 가능
+                let world = &s[6..]; // 맨 마지막 바이트 까지 포함 할때는 뒤의 값 생략 가능
+                let random = &s[3..len];
+                let all = &s[..]; // 앞뒤를 생략하면 모두.
+                println!("{}, {}. {}, all = {}", hello, world, random, all);
+
+                let word = first_word(&s); // word 는 값 5을 받음.
+                s.clear(); // String 을 비움으로 "" 으로 만듦
+
+                // 여기서는 word에는 여전히 5가 들어있지만, 이 5를 의미있게 쓸 수 있는
+                // 문자열은 더 이상 없음으로 word 는 이제 전혀 유효하지 않으나?
+
+                println!("slice -> {}", word); // 출력은 가능
+
+                // get first word
+                let hi = String::from("Hi Everyone");
+                let str = slice_first_word(&hi);
+                println!("first word : {}", str);
+
+                // [ 문자열 리터럴 ]
+                // letter -> 바이너리의 특정 지점을 가르키는 슬라이스
+                // 불변 타입
+                let letter = "Fine Thanks And You?";
+                // 슬라이스는 바로 인수로 전달할 수 있음.
+                // String 이라면 String의 슬라이스 혹은 String 의 참조자를 전달할 수 있음.
+                // String 에 대한 참조자 대신 문자열 슬라이스를 매개 변수로 하는 함수를 정의하면
+                // 기능면에서 손해 보지 않으면서
+                // API 를 더 일반적으로 유하게 만들어 줌.
+                let word = second_word(letter);
+                println!("fine : {}", word);
+
+                let a = [1, 2, 3, 4, 5];
+                let slice = &a[1..3];
+                assert_eq!(slice, &[2, 3]);
+
+                // 소유권, 참조, 슬라이스는 컴파일 타임에 메모리 안정성을 보장.
+            } // slice
+            44 => {
+                // 구조체.
+                // 튜플과 같이 각각 다른 타입의 구성요소를 가질수 있음.
+                // 각각에 이름을 부여, 순서에 의존할 필요가 없음.
+                // field 필드 라고 부르는 각 구성요소.
+                // 구조체 사용 : 인스턴스 생성
+
+                // 일부 필드만 가변형으로 만들 수 없음.
+                let mut person_kim = Person {
+                    active: true,
+                    username: String::from("Kim Bum Jun"),
+                    email: String::from("admin@vivabj.com"),
+                    sign_in_count: 1,
+                };
+                person_kim.email = String::from("bm@live.co.kr");
+
+
+            } // struct, 구조체
             _ => break,
         }
     }
+} // main
+
+// (44) 구조체
+struct Person {
+    active: bool,
+    username: String,
+    email: String,
+    sign_in_count: u64,
 }
-fn menu_items() {
-    menus("26. random number");
-    menus("27. if statement");
-    menus("28. number types");
-    menus("29. match statement");
-    menus("30. loop statement");
-    menus("31. tuple");
-    menus("32. string");
-    menus("33. casting");
-    menus("34. enum");
-    menus("35. say_hello!");
-    menus("36. write!");
-    menus("37. vector_ex");
-    menus("38. example_2");
-    menus("39. example_max_value");
+
+
+
+
+// (43)
+fn second_word(s: &str) -> &str {
+    let arr = s.as_bytes();
+    for (i, &item) in arr.iter().enumerate() {
+        if item == b' ' {
+            return &s[i..];
+        }
+    }
+    &s[..]
 }
-fn menus(menu: &str) {
-    println!("{}", menu);
+fn slice_first_word(s: &String) -> &str {
+    let bytes = s.as_bytes();
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+fn first_word(s: &String) -> usize {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b' ' {
+            return i;
+        }
+    }
+    s.len()
+}
+
+// (42) reference
+// s 가 참조자 타입임을 나타내줌.
+// s 는 소유권이 없으므로 s 가 더이상 사용되지 않을 때도 참조자가 가리킨 값이 버려지지 않음.
+fn reference(s: &mut String) -> (usize) {
+    s.push_str(", World");
+    s.len()
+}
+
+// 반환값을 반환하는 함수의 예
+// 러스트에서 함수의 반환 값은 본문의 마지막 표현식의 값과 동일
+// return 키워드와 값을 지정하여 함수로 부터 일찍 값을 반환할 수 있지만
+// 대부분의 함수들은 암묵적으로 마지막 표현식 값을 반환함.
+fn sub(a: i32, b: i32) -> i32 {
+    a - b
+}
+
+fn ten() -> i32 {
+    10
+}
+
+fn function() {
+    // namming convention : snake case
+    // parameter (매개변수), argument (인수)
+    // 함수의 본문은 필요에 따라
+    // 표현식 (expression) : 결과값을 평가함.
+    // 구문 (statement) : 어떤 동작을 수행하고 값을 반환하지 않는 명령.
+    // 으로 구성됨
+    // 러스트는 표현식 기반의 언어이므로 대부분의 코드는 표현식이며 이는 어떤 값을 평가함.
+    // 5 + 6 -> 이수식은 11이라는 값을 평가하는 표현식.
+    // 표현식은 구문의 일부일 수 있음.
+    // let y = 6; // 구문에서 6은 값을 평가하는 표현식
+    // 함수를 호출하는 것도 매크로를 호출하는 것도 표현식.
+    // 함수 내부의 스코프 블록도 표현식.
+    let y = {
+        let x = 3;
+        x + ten()
+    };
+    println!("expression => {}", y);
+    // 함수 정의 : 구문
+    // let x = (let y = 6); //  잘못된 문장, 다른 언어와의 차이점.
+    // 표현식은 종결을 나타내는 세미콜론 을 사용하지 않음.
+
+    println!("{} - {} = {}", 8, 4, sub(8, 4));
+    println!("{3} {2} {1} {0}", 1, 2, 3, 4);
+    let rem = 6 % 3;
+    let rem2 = 6 % 4;
+    display_result(rem + rem2);
+}
+
+// 변수
+fn variables() {
+    // 스칼라 타입 : 하나의 값을 표현함.
+    // 정수, 부동소수점, 부우린, 문자.
+    // panic : 에러가 발생하면서 프로그램이 종료 될때 사용되는 용어.
+    // 릴리즈 모드로 컴파일 (release flag) 시, 정수 오버플로우 발생시 -> 2의 보수 감싸기를 수행
+    // two's complement wrapping : 해당 타입이 가질수 있는 최댓값 도다 더 큰값은 허용되는 최솟값으로 돌아감 (wrap around, u8-> 256=0, 257=1 이됨.)
+    // wrapping_* : 메서드 감싸기 동작
+    // checked_* : None
+    // overflowing_* : 오버플로우 발생이 있었는지 알려주는 부울린 값 반환
+    // saturating_* : 값의 최대 혹은 최소값 사이로 제한
+
+    // 부동소수점 : IEEE-754
+    // f32 : single-precision
+    // f64 : double-precision
+
+    // 정수 나눗셈은 가장 가까운 정숫값으로 버림.
+
+    // [ 문자, char ]
+    // 4bytes
+    // 유니코드 스칼라 값을 표현, 한글 이모지 넓이가 0인 공백 문자 표현가능
+    // U+0000 - U+D7FF, U+E000 - U+10FFFF
+
+    // [ 복합타입, compound type ]
+    // 여러값을 하나의 타입으로 묶을 수 있음.
+    // 튜플 (tuple) : 고정길이, 한번 선언되면 그 크기를 변경할 수 없음.
+
+    let tup = (500, 6.4, 1);
+    let (x, y, z) = tup;
+    let temp: (i32, f64, u8) = tup;
+    println!("{} {} {}, {} {} {}", x, y, z, temp.0, temp.1, temp.2);
+
+    // 배열(array) : 요소의 갯수가 변경되지 않을 때.
+    let array: [i32; 6] = [4, 5, 6, 7, 8, 9];
+    let arr = [3; 3]; // 같은 요소로 초기화
+    for item in arr {
+        println!("arr --> {}", item);
+    }
+    for item in array {
+        println!("array --> {item}");
+    }
+
+    print!("Enter Index number >> ");
+    io::stdout().flush().unwrap();
+
+    let mut index = String::new();
+
+    io::stdin()
+        .read_line(&mut index)
+        .expect("Failed to read line");
+
+    let index: usize = index
+        .trim()
+        .parse()
+        .expect("Index entered was not a number");
+
+    let element = array[index];
+    println!("Index is {}", element);
+    // 백터 (vector) : 배열보다 보다 유연함, 요소가 변경될 때.
+
+    // max value
+    println!("Max u8 : {}", u8::MAX);
+    println!("Max u16 : {}", u16::MAX);
+    println!("Max u32 : {}", u32::MAX);
+    println!("Max u64 : {}", u64::MAX);
+    println!("Max usize : {}", usize::MAX);
+    println!("Max u64 : {}", u64::MAX);
+    println!("Max f32 : {}", f32::MAX);
+    println!("Max f64 : {}", f64::MAX);
+    println!("Max isize : {}, usize : {}", isize::MAX, usize::MAX);
+    // isize, usize : 64-bit arch, 32-bit arch
+    // Byte(u8 only) : b'A'
+    // Decimal : 98_222
+    // Hex : 0xf
+    // Octal : 0o77
+    // Binary : 0b1111_0000
+    // i32 : rust default
+
+    const ONE_MIL: u32 = 1_000_000;
+    const PI: f64 = std::f64::consts::PI;
+    // (쉐도잉) 같은 이름의 다른 형식의 변수 선언 가능
+    let age = "47";
+    let mut age: u32 = age.trim().parse().expect("Age was't assigned a number");
+    age = age + 1;
+    println!("I'm {} and I want ${}", age, ONE_MIL);
 }

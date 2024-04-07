@@ -43,11 +43,12 @@ fn menu() {
     draw_line(" ( menu ) ", line_count);
 
     print!("{:space$}. {}\n", 0, "Quit");
-    print!("{:space$}. {}", 1, "assert_eq!");
-    print!("{:space$}. {}", 2, "format");
-    print!("{:space$}. {}", 3, "struct");
+    print!("{:space$}. {}\t", 1, "assert_eq!");
+    print!("{:space$}. {}\t", 2, "format");
+    print!("{:space$}. {}\t", 3, "struct");
     print!("{:space$}. {}\n", 4, "tuple");
-    print!("{:space$}. {}", 5, "array");
+    print!("{:space$}. {}\t", 5, "array");
+    print!("{:space$}. {}\t", 6, "expressions");
 
     println!("");
     draw_line(" \u{2766} ", line_count);
@@ -88,7 +89,7 @@ fn main() {
                 ex_drink(drink);
             }
             4 => {
-                // tuple
+                //--> tuple
                 let mut s = String::new();
                 s = "Hello World".into();
                 let result = ex_tuple(3, 5, s);
@@ -97,12 +98,38 @@ fn main() {
                     "\u{2766} {} {} {} - x: {}, y: {}",
                     result.0, result.1, result.2, x, y
                 );
+
                 let user_info = ("Kim Bum Jun", 20);
+                let favorites = ("margenta", 9, "TX", "Pizza", "Coding", "Home");
+
+                let place = favorites.5;
+
+                let (x, y) = ex_tuple_cordinate();
+                println!("\u{2766} {} {} {}", x, y, place);
+                if y > 5 {
+                    print!("Yes greater than 5 -> {}", y);
+                }
             }
             5 => {
-                // array
-
+                //--> array
                 ex_array();
+            }
+            6 => {
+                //--> expressions
+                let my_num = 3;
+                let is_it_5 = if my_num < 5 { true } else { false };
+
+                let message = match my_num {
+                    1 => "Hello",
+                    2 => "World",
+                    3 => "Thanks",
+                    _ => "goodbye",
+                };
+
+                println!(
+                    "\u{2766} {} is greater than 5? {}, {}",
+                    my_num, is_it_5, message
+                );
             }
             _ => break,
         } // match
@@ -135,7 +162,6 @@ fn ex_array() {
     assert_eq!(512, u16::from_le_bytes(bytes[1..3].try_into().unwrap()));
     let temp = u16::from_le_bytes(bytes[1..3].try_into().unwrap());
     print!("{}", temp);
-
     println!("");
     let arr: [i32; 9] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     let t = &arr[1..8];
@@ -143,9 +169,14 @@ fn ex_array() {
         print!("\nindex: {}, value: {:}", item.0, item.1);
     }
 }
+
 //--> (4)
 fn ex_tuple(a: i32, b: i32, c: String) -> (i32, i32, String) {
     (a * 10, b * 20, format!("== {:?} ==", c) as String)
+}
+
+fn ex_tuple_cordinate() -> (i32, i32) {
+    (32, 89)
 }
 
 //--> (3)
