@@ -1,26 +1,21 @@
 #![allow(unused)]
-
 use rand::Rng; // (5)
 use std::any::Any;
 use std::cmp::Ordering;
 use std::convert::identity;
 // (4)
+use ansi_term::{Colour, Style};
+use data_encoding::HEXUPPER;
+use ring::digest::{Context, Digest, SHA256};
+use ring::error::Unspecified;
+use rusqlite::{params, Connection, Result};
 use std::fs::File;
 use std::io; //  (1)
-use std::io::Write;
-use std::io::{BufRead, BufReader, ErrorKind}; // (2)
-use std::mem::size_of_val; // (3)
+use std::io::{BufRead, BufReader, ErrorKind, Read, Write}; // (2)
+use std::mem::size_of_val;
+use std::process::exit;
 
-/* HotKey
-   - `ctrl + alt + m`       : 메서드 추출
-   - `ctrl + alt + t`       : 코드 감싸기
-   - `alt + shift + enter`  : 함수 만들기
-   - `alt + shift + f`      : 코드 서식 자동 구성
-   - `alt + up/down`        : line up/down1
-   - `cmd + shift + s`      : 모두 저장
-   - `ctrl + ` `             : 터미널
-*/
-
+// (3)
 fn random_number() {
     // Random
     let random_num = rand::thread_rng().gen_range(1..101);
@@ -46,26 +41,18 @@ fn number_types() {
     println!("5 / 4 = {}", num_3 / num_4);
     println!("5 % 4 = {}", num_3 % num_4);
 }
-fn if_statement() {
-    let age = 8;
+fn if_statement(age: i32) {
     if age >= 1 && age <= 18 {
-        //
         println!("You ar nice days...");
     } else if (age == 21 || age == 50) {
-        //
         println!("21 or 50 years old");
     } else if age >= 65 {
-        //
         println!("65 over ...");
     } else {
-        //
         println!("Not a Important");
     }
 
-    let mut my_age = 47;
-
-    let can_vote = if my_age > 18 { true } else { false };
-
+    let can_vote = if age > 18 { true } else { false };
     println!("Can Vote : {}", can_vote);
 }
 
@@ -1147,8 +1134,13 @@ fn write_ex() {
         println!("{}", char);
     }
 }
+
+fn draw_line(title: &str, count: usize) {
+    println!("{:=^1$}", title, count);
+}
+
 fn menu_items() {
-    clear_screen();
+    draw_line(" ( menu )", 40);
     menus("26. random number");
     menus("27. if statement");
     menus("28. number types");
@@ -1167,19 +1159,24 @@ fn menu_items() {
     menus("41. function");
     menus("42. reference");
     menus("43. slice");
+    menus("44. struct");
+    menus("45. method");
+    menus("46. ANSI Terminal");
+    menus("47. sqlite db");
+    draw_line(" ( end )", 40);
 }
 fn menus(menu: &str) {
     println!("{}", menu);
 }
 
-fn main() {
-    menu_items();
-
+fn main() -> Result<()> {
     let mut input = String::new();
     loop {
-        println!("Select Menu (1 ~ 100, Exit: 0)");
+        menu_items();
+        println!("메뉴선택 (1 ~ 100, Exit: 0)");
         print!(">> ");
         io::stdout().flush().unwrap();
+
         input.clear();
         let mut choice: u32 = 0;
         let b = io::stdin().read_line(&mut input).expect("Not integer");
@@ -1190,11 +1187,12 @@ fn main() {
             println!("Please enter a valid number.");
             continue;
         }
-
+        clear_screen();
+        println!("\n\n");
         match choice {
             0 => {
                 clear_screen();
-                return;
+                exit(0);
             }
             1 => size_of('H', '글'),
             2 => {
@@ -1228,9 +1226,8 @@ fn main() {
             23 => ownership(),
             24 => slice_target(),
             25 => struct_runner(),
-
             26 => random_number(),
-            27 => if_statement(),
+            27 => if_statement(18),
             28 => number_types(),
             29 => match_statement(18),
             30 => loops_ex(),
@@ -1376,15 +1373,195 @@ fn main() {
                     sign_in_count: 1,
                 };
                 person_kim.email = String::from("bm@live.co.kr");
+                let person = build_user(person_kim.email, person_kim.username);
+                println!(
+                    "{} {} {} {}",
+                    person.username, person.email, person.active, person.sign_in_count
+                );
 
+                let black = VivColor(0, 0, 0);
+                let origin = VivPoint(0, 0, 0);
 
+                println!("black color : {}, {}, {}", black.0, black.1, black.2);
+                println!("zero point : {}, {}, {}", origin.0, origin.1, origin.2);
+
+                let subject = AlwaysSame;
+
+                //
+                let scale = 2;
+                let rect = Rect {
+                    width: dbg!(30 * scale),
+                    height: 50,
+                };
+
+                let area = area(&rect);
+                println!("30 * 50 area = {}", area);
+                println!("rect is {:?}", rect);
+                dbg!(&rect);
             } // struct, 구조체
-            _ => break,
-        }
+            45 => {
+                // 함수와 유사하나
+                // 구조체 컨텍스트에 정의되고
+                // 첫번째 매개변수가 항상 self 라는 차이점이 있음.
+                // self 매개변수는 메서드를 호출하고 있는 구조체 인스턴스를 의미함.
+                // self : 매서드 수신자.
+                // &self : 읽기 전용
+                // &mut self : 변경가능
+                // self : 소비용.
+
+                let rect = Rect {
+                    width: 29,
+                    height: 15,
+                };
+                println!(
+                    "The area of the rectanble is {} square pixels.",
+                    rect.to_area()
+                );
+                println!(
+                    "The rectangle has a greate than 30 width? {}",
+                    rect.check_width()
+                );
+
+                // 자동 참조 및 역참조 (automatic referencing and dereferencing)
+                // p1.distance(&p2); == (&p1).distance(&p2);
+                let rect1 = Rect {
+                    width: 30,
+                    height: 50,
+                };
+                let rect2 = Rect {
+                    width: 10,
+                    height: 40,
+                };
+            } // (확장) 메서드, method
+            46 => {
+                // Hashing
+                println!(
+                    "{} {} {} \n{}\n{}",
+                    Colour::Red.paint("red"),
+                    Colour::Blue.paint("blue"),
+                    Colour::Green.paint("green"),
+                    Style::new().bold().paint("This is Bold"),
+                    Colour::Yellow.paint("This is colored"),
+                );
+            }
+            47 => {
+                //
+                let result = sqlite_db();
+                println!("{}", result.iter().enumerate().len());
+            }
+            48 => {
+                //
+                let item = Menu::Burger;
+                let drink_type = "water";
+                let paid = true;
+                let order = match item {
+                    Menu::Burger => {
+                        if drink_type == "water" {
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                    Menu::Fries => true,
+                    Menu::Drink => true,
+                };
+
+                if order {
+                    println!("Ordered");
+                }
+            }
+            49 => {
+                // Expressions
+                // secret file : admins only
+                let access_level = Access::Guest;
+                let can_access_file = match access_level {
+                    Access::Admin => {
+                        true
+                    }
+                    Access::Manager => {
+                        true
+                    }
+                    Access::User => {
+                        false
+                    }
+                    Access::Guest => {
+                        false
+                    }
+                };
+
+                println!("Can Access");
+            }
+            _ => {}
+        } // excute match
+        println!("\n");
     }
 } // main
 
+enum Access {
+    Admin,
+    Manager,
+    User,
+    Guest
+}
+
+enum Menu {
+    Burger,
+    Fries,
+    Drink,
+}
+
+fn sqlite_db() -> Result<()> {
+    let conn = Connection::open("vivakr.db");
+
+    &conn.unwrap().execute(
+        "create table if not exists people (\
+        id integer primary key, \
+        name text not null )",
+        (),
+    )?;
+
+    Ok(())
+}
+// (45) 메서드
+
+// impl (implementation, 구현)
+// Rect 컨텍스트에 함수를 정의하기 위해서
+// Rect 에 대한 impl 블럭을 만드는 것으로 시작함.
+// impl 블록 내의 모든 것은 Rect 타입과 연관됨.
+// to_area 함수를 impl 의 중괄호 안으로 옮기고 함수 시그니처의 첫번째 매개변수를
+// self (닷넷의 this) 로 지정한 후.
+// 닷넷의 확장 메서드 호출 방식과 동일한 방식...
+// 메서드 문법 을 사용하여 Rect 인스턴스의 to_area 메서드를 호출 하여 사용함.
+// &self 과 같이 & 를 붙여둠, 인스턴스를 변경하고 싶다면 `&mut self` 를 사용함.
+
+impl Rect {
+    fn to_area(&self) -> u32 {
+        self.height * self.width
+    }
+}
+
+impl Rect {
+    fn check_width(&self) -> bool {
+        self.width > 30
+    }
+
+    fn can_hold(&self, other: &Rect) -> bool {
+        self.width > other.width && self.height > other.height
+    }
+}
+
 // (44) 구조체
+
+#[derive(Debug)]
+struct Rect {
+    width: u32,
+    height: u32,
+}
+
+fn area(rect: &Rect) -> u32 {
+    rect.width * rect.height
+}
+
 struct Person {
     active: bool,
     username: String,
@@ -1392,9 +1569,22 @@ struct Person {
     sign_in_count: u64,
 }
 
+// 명명된 필드없는 튜플 구조체
+struct VivColor(i32, i32, i32);
+struct VivPoint(i32, i32, i32);
 
+// 필드가 없는 유사 유닛 구조체
+// 테스트 용도로 사용됨.
+struct AlwaysSame;
 
-
+fn build_user(email: String, username: String) -> Person {
+    Person {
+        active: true,
+        username,
+        email,
+        sign_in_count: 1,
+    }
+}
 // (43)
 fn second_word(s: &str) -> &str {
     let arr = s.as_bytes();

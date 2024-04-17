@@ -13,4 +13,8 @@ keywords = ["bootcamp", "beginner"]
 
 [dependencies]
 rand = "0.8.5"
-
+ring = "0.17.8"
+data-encoding = "2.5.0"
+ansi_term = "0.12.1"
+rusqlite = "0.31.0"
+#cates.io

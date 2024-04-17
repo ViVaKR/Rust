@@ -36,7 +36,6 @@ fn get_choice() -> i32 {
 }
 
 fn menu() {
-    // Menus
     println!("\n\u{2766} 메뉴선택 (1 ~ 100, Quit: 0)");
     let space = 3;
     let line_count = 60;
