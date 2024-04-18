@@ -58,6 +58,11 @@
 [ 높은 주소 ]
 ------------
 
+```bash
+$ cargo run -q --bin viv-camp
+
+```
+
 
 
 

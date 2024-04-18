@@ -8,6 +8,7 @@ use ansi_term::{Colour, Style};
 use data_encoding::HEXUPPER;
 use ring::digest::{Context, Digest, SHA256};
 use ring::error::Unspecified;
+use rusqlite::DatabaseName::Temp;
 use rusqlite::{params, Connection, Result};
 use std::fs::File;
 use std::io; //  (1)
@@ -482,11 +483,54 @@ fn ownership() {
     let (r1, len) = calculate_length(s4);
     println!("The length of '{r1}' is {len}");
 
-    // 참조 -> `&`
+    // 참조 -> `&`, borrowing
     let s6 = String::from("vivakr");
     let len_s6 = calculate_length_ref(&s6); // 값을 소유하지 않는 &s6 참조, s6 는 삭제되지 않음.
     println!("The length of '{s6}' is {len_s6}");
+
+    // borrowing
+    let book = Book {
+        pages: 5,
+        rating: 9,
+    }; // book 컬리 브레이스 중괄호에서 자동 삭제됨으로 Brow
+
+    display_rating(&book); // 소유권이 이전됨..
+    display_page_count(&book);
+
+    // Grocery Item
+    let my_item = GroceryItem {
+        quantity: 3,
+        id: 99,
+    };
+    display_quantity(&my_item);
+    display_id(&my_item);
 } // 닫는 중괄호에서 메모리 반환이 자동 호출됨. (drop)
+
+struct GroceryItem {
+    quantity: i32,
+    id: i32,
+}
+
+fn display_quantity(item: &GroceryItem) {
+    println!("quantity: {:?}", item.quantity);
+}
+
+fn display_id(item: &GroceryItem) {
+    println!("id: {:?}", item.id);
+}
+
+struct Book {
+    pages: i32,
+    rating: i32,
+}
+
+fn display_page_count(book: &Book) {
+    println!("pages = {:?}", book.pages);
+}
+
+fn display_rating(book: &Book) {
+    println!("rating = {:?}", book.rating);
+} // drop book
 
 // 변경가능한 참조 (
 // 불변형 참조 (reference)
@@ -506,6 +550,7 @@ fn gives_ownership() -> String {
     let some_string = String::from("yours");
     some_string
 }
+
 // ownership (heap)
 fn takes_ownership(some_string: String) {
     println!("{some_string}");
@@ -899,7 +944,6 @@ fn data_type() {
 
     // String Type
     // name
-    //
     // (1) prt : Pointer to data stored on the heap
     // (2) len : Data size in bytes
     // (3) capacity : Total amount of memory received from the allocator
@@ -1139,67 +1183,217 @@ fn draw_line(title: &str, count: usize) {
     println!("{:=^1$}", title, count);
 }
 
-fn menu_items() {
-    draw_line(" ( menu )", 40);
-    menus("26. random number");
-    menus("27. if statement");
-    menus("28. number types");
-    menus("29. match statement");
-    menus("30. loop statement");
-    menus("31. tuple");
-    menus("32. string");
-    menus("33. casting");
-    menus("34. enum");
-    menus("35. say_hello!");
-    menus("36. write!");
-    menus("37. vector_ex");
-    menus("38. variables");
-    menus("39. variables");
-    menus("40. ownership");
-    menus("41. function");
-    menus("42. reference");
-    menus("43. slice");
-    menus("44. struct");
-    menus("45. method");
-    menus("46. ANSI Terminal");
-    menus("47. sqlite db");
-    draw_line(" ( end )", 40);
+/* [ impl ] */
+struct Temperature {
+    degree_f: f64,
 }
+
+//impl
+impl Temperature {
+    // 대문자 Self == Temperature
+    // 이름 변경시에도 사용 가능함으로
+    // Self 사용 권장.
+    fn freezing() -> Self {
+        Self { degree_f: 32.2 }
+    }
+
+    fn boiling() -> Self {
+        Self { degree_f: 212.0 }
+    }
+
+    fn show_temp(&self) {
+        println!("{:?} degree F", self.degree_f);
+    }
+}
+
+enum Colors {
+    Brown,
+    Red,
+    Green,
+}
+
+impl Colors {
+    fn print(&self) {
+        match self {
+            Colors::Brown => {
+                println!("Brown")
+            }
+            Colors::Red => {
+                println!("Red")
+            }
+            Colors::Green => {
+                println!("Green")
+            }
+        }
+    }
+}
+
+struct Dimensions {
+    // 치수
+    width: f64,
+    height: f64,
+    depth: f64,
+}
+
+impl Dimensions {
+    fn print(&self) {
+        println!("widht: {:?}", self.width);
+        println!("height: {:?}", self.height);
+        println!("depth: {:?}", self.depth);
+    }
+}
+
+struct ShippingBox {
+    weight: f64,
+    color: Colors,
+    dimensions: Dimensions,
+}
+
+impl ShippingBox {
+    fn new(weight: f64, color: Colors, dimensions: Dimensions) -> Self {
+        Self {
+            weight,
+            color,
+            dimensions,
+        }
+    }
+    fn print(&self) {
+        self.color.print();
+        self.dimensions.print();
+        println!("weight: {:?}", self.weight);
+    }
+}
+
+/* [ 메뉴 ] */
 fn menus(menu: &str) {
     println!("{}", menu);
 }
 
-fn main() -> Result<()> {
+fn menu_items() {
+    draw_line(" ( menu )", 40);
+    menus(
+        "\
+        1. Impl(1)\t2. Impl(2)\t3. Ownership (1)\t4. Vector\t5. ...\n\
+        6. ...\t7. ...\t8. ...\t9. ... \t10. ...\n\
+        26. random number\t27. if statement\t28. number types\t29. match statement\t30. loop statement\n\
+        31. tuple \t32. string\t33. casting\t34. enum\t35. say_hello!\n\
+        36. write!\t37. vector_ex\t38. variables\t39. var\t40. ownership (2)\n\
+        41. function\t42. reference\t43. slice\t44. struct\t45. method\n\
+        46. ANSI Terminal\t47. sqlite db\t48. Enum Match\t49. Enum\t50. Boolean\n\
+        51. Intermediate Memory\t52. ...\t53. Boolean\t54. ...\t55. ...");
+
+    draw_line(" ( end )", 40);
+}
+
+/* [ 메뉴선택 ] */
+fn choice_menu() -> u32 {
+    io::stdout().flush().unwrap();
     let mut input = String::new();
+    println!("메뉴선택 (1 ~ 100, Exit: 0)");
+    print!(">> ");
+    io::stdout().flush().unwrap();
+    input.clear();
+    let b = io::stdin().read_line(&mut input).expect("Not integer");
+    if let Ok(val) = input.trim().parse::<u32>() {
+        val
+    } else {
+        1000
+    }
+}
+
+fn pause_screen() {
+    let mut pause = String::new();
+    println!("Complete...\nPress Enter Show Menu...");
+    let pause = io::stdin().read_line(&mut pause);
+    clear_screen();
+}
+fn main() -> Result<()> {
     loop {
         menu_items();
-        println!("메뉴선택 (1 ~ 100, Exit: 0)");
-        print!(">> ");
-        io::stdout().flush().unwrap();
-
-        input.clear();
-        let mut choice: u32 = 0;
-        let b = io::stdin().read_line(&mut input).expect("Not integer");
-
-        if let Ok(val) = input.trim().parse::<u32>() {
-            choice = val;
-        } else {
+        let mut choice: u32 = choice_menu();
+        if (choice == 1000) {
             println!("Please enter a valid number.");
             continue;
         }
         clear_screen();
         println!("\n\n");
+
         match choice {
             0 => {
                 clear_screen();
                 exit(0);
-            }
-            1 => size_of('H', '글'),
+            } // [ Exit ]
+            1 => {
+                // impl, C# 확장 메서드와 유사함.
+                let hot = Temperature { degree_f: 99.9 };
+                hot.show_temp();
+                let cold = Temperature::freezing(); // :: 식별.
+                cold.show_temp(); // borrowing
+                cold.show_temp();
+                cold.show_temp();
+                cold.show_temp();
+                let boiling = Temperature::boiling();
+                boiling.show_temp();
+            } // [ impl(1) ]
             2 => {
-                println!("What is your name?");
-            }
-            3 => println!("Three"),
-            4 => data_type(),
+                // [ impl(2) ]
+                // Impementing functionality with the impl keyword
+                let small_dimensions = Dimensions {
+                    width: 1.0,
+                    height: 2.0,
+                    depth: 3.0,
+                };
+
+                let small_box = ShippingBox::new(5.0, Colors::Red, small_dimensions);
+
+                small_box.print();
+                pause_screen();
+            } // [ impl(2) ]
+            3 => {
+                ownership();
+            } // [ OwnerShip ]
+            4 => {
+                // [ Vector ]
+                // Multiple pieces of data
+                // Must be the same type
+                // Used for lists of information
+                // Can add, remove, and traverse the entries
+
+                // let my_numbers = vec![1, 2, 3];
+
+                let mut my_numbers = Vec::new();
+                my_numbers.push(1);
+                my_numbers.push(2);
+                my_numbers.push(3);
+
+                my_numbers.pop(); // remove last item. -> 3,
+                                  // index : square braces.
+                println!(
+                    "vector length: {}, my_number[1] = {}",
+                    my_numbers.len(),
+                    my_numbers[1]
+                );
+
+                let numbers = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                let mut sum = 0;
+                for i in numbers {
+                    sum = sum + i;
+                    println!(
+                        "{:?} - {:?}",
+                        i,
+                        if (i ^ 1) == (i + 1) {
+                            "짝수"
+                        } else {
+                            "홀수"
+                        }
+                    );
+                }
+                println!("Sum o numbers = {:?}", sum);
+
+                pause_screen();
+            } // [ Vector ]
+
+            // 4 => data_type(),
             5 => println!("{}", add(25, 35)),
             6 => expr(),
             7 => expr_exercies(),
@@ -1243,10 +1437,25 @@ fn main() -> Result<()> {
             }
             39 => variables(),
             40 => {
-                // ownership
+                // Ownership
+                // Programs must track memory
+                // Rust utilizes an "ownership" model to manage memory
+                //  - The "owner" of memory is responsible for cleaning up the memory
+                // Memory can either be "moved" or "borrowed"
+
                 let s1 = String::from("Hello, World");
                 let (s2, len) = calculate_length(s1);
                 println!("{} - {}", s2, len);
+
+                // 소유권 이전
+                let access = Access::Guest;
+                display_right(access); // 값이 이동됨.
+                                       // display_right(access); // 삭제 된 변수이므로 재사용 할 수 없음, 오류 발생.
+
+                // 소유권 대여/차용
+                let acc = Access::Admin;
+                borrow_right(&acc);
+                borrow_right(&acc);
             }
             41 => {
                 // function
@@ -1475,21 +1684,27 @@ fn main() -> Result<()> {
                 // secret file : admins only
                 let access_level = Access::Guest;
                 let can_access_file = match access_level {
-                    Access::Admin => {
-                        true
-                    }
-                    Access::Manager => {
-                        true
-                    }
-                    Access::User => {
-                        false
-                    }
-                    Access::Guest => {
-                        false
-                    }
+                    Access::Admin => true,
+                    Access::Manager => true,
+                    Access::User => false,
+                    Access::Guest => false,
                 };
 
                 println!("Can Access");
+            }
+            50 => {
+                // boolean expression
+                let value = 100;
+                print_message(value > 100);
+            }
+            51 => {
+                // Intermediate Memory
+                // Offsets
+                // Address 4, offset 1 (rows[4], columns[1], Data[1]) , index number
+                // each byte get address
+                // Memory uses addresses & offsets
+                // Addresses are permanent, data difers
+                // Offsets can be used to "index" into some data
             }
             _ => {}
         } // excute match
@@ -1497,11 +1712,36 @@ fn main() -> Result<()> {
     }
 } // main
 
+// borrow
+fn borrow_right(acc: &Access) {
+    match acc {
+        Access::Admin => {}
+        Access::Manager => {}
+        Access::User => {}
+        Access::Guest => {}
+    }
+}
+
+fn display_right(access: Access) {
+    match access {
+        Access::Admin => {}
+        Access::Manager => {}
+        Access::User => {}
+        Access::Guest => {}
+    }
+}
+
+fn print_message(gt_100: bool) {
+    match gt_100 {
+        true => println!("its big"),
+        false => println!("its small"),
+    }
+}
 enum Access {
     Admin,
     Manager,
     User,
-    Guest
+    Guest,
 }
 
 enum Menu {
@@ -1522,9 +1762,9 @@ fn sqlite_db() -> Result<()> {
 
     Ok(())
 }
-// (45) 메서드
 
-// impl (implementation, 구현)
+// [ impl ]
+// implementation, 구현
 // Rect 컨텍스트에 함수를 정의하기 위해서
 // Rect 에 대한 impl 블럭을 만드는 것으로 시작함.
 // impl 블록 내의 모든 것은 Rect 타입과 연관됨.
