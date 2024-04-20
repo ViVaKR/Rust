@@ -11,10 +11,10 @@ use ring::error::Unspecified;
 use rusqlite::DatabaseName::Temp;
 use rusqlite::{params, Connection, Result};
 use std::fs::File;
-use std::io; //  (1)
 use std::io::{BufRead, BufReader, ErrorKind, Read, Write}; // (2)
 use std::mem::size_of_val;
 use std::process::exit;
+use std::{array, io}; //  (1)
 
 // (3)
 fn random_number() {
@@ -67,6 +67,7 @@ fn match_statement(age: i32) {
     };
 
     let voting_age = 18;
+
     match age.cmp(&voting_age) {
         Ordering::Less => println!("Can't Vote"),
         Ordering::Greater => println!("Can Vote"),
@@ -1150,6 +1151,27 @@ fn clear_screen() {
     print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
 }
 
+// Enum Examples
+enum Mouse {
+    LeftClick,
+    RightClick,
+    MiddleClick,
+    Scroll(i32),
+    Move(i32, i32), // X, Y Position
+}
+
+enum PromoDiscount {
+    NewUser,
+    Holiday(String),
+}
+
+enum Discount {
+    Percent(f64),
+    Flat(i32),
+    Promo(PromoDiscount),
+    Custom(String),
+}
+
 enum Direction {
     Up,
     Down,
@@ -1157,7 +1179,16 @@ enum Direction {
     Right,
 }
 
-//
+enum TicketDiscount {
+    Percent(i32),
+    Flat(i32),
+}
+struct Ticket {
+    event: String,
+    price: i32,
+}
+
+// enum
 fn enum_ex(go: Direction) {
     let direction = match go {
         Direction::Up => "up",
@@ -1263,7 +1294,58 @@ impl ShippingBox {
         println!("weight: {:?}", self.weight);
     }
 }
+/* Vector */
+struct VecScore {
+    score: i32,
+}
 
+// String and &str
+fn print_it(data: &str) {
+    println!("{:?}", data);
+}
+
+struct Employee {
+    name: String,
+}
+
+struct LineItem {
+    name: String,
+    count: i32,
+}
+
+fn print_name(name: &str) {
+    println!("name: {:?}", name);
+}
+
+struct PersonB {
+    name: String,
+    fav_color: String,
+    age: i32,
+}
+fn print_person(data: &str) {
+    println!("\u{2766} =>  {:?}", data);
+}
+
+// Derive, Clone Copy not borrowing
+#[derive(Debug, Clone, Copy)]
+enum Position {
+    Manager,
+    Supervisor,
+    Worker,
+}
+
+#[derive(Debug, Clone, Copy)]
+struct Biz {
+    position: Position,
+    work_hours: i64,
+}
+
+fn print_biz(biz: Biz) {
+    // not borrowing
+    println!("\u{2766} {:?}", biz);
+}
+
+/* ------------------------------------------ */
 /* [ 메뉴 ] */
 fn menus(menu: &str) {
     println!("{}", menu);
@@ -1273,8 +1355,9 @@ fn menu_items() {
     draw_line(" ( menu )", 40);
     menus(
         "\
-        1. Impl(1)\t2. Impl(2)\t3. Ownership (1)\t4. Vector\t5. ...\n\
-        6. ...\t7. ...\t8. ...\t9. ... \t10. ...\n\
+        1. Impl(1)\t2. Impl(2)\t3. Ownership (1)\t4. Vector\t5. String and &str (A)\n\
+        6. String and &str (B)\t7. Derive\t8. ...\t9. ... \t10. ...\n\
+        11. Type Annotations\t12. ... \t13. ... \t14. ... \t15. ... \n\
         26. random number\t27. if statement\t28. number types\t29. match statement\t30. loop statement\n\
         31. tuple \t32. string\t33. casting\t34. enum\t35. say_hello!\n\
         36. write!\t37. vector_ex\t38. variables\t39. var\t40. ownership (2)\n\
@@ -1301,12 +1384,13 @@ fn choice_menu() -> u32 {
     }
 }
 
-fn pause_screen() {
+fn pause_screen(choice: u32) {
     let mut pause = String::new();
-    println!("Complete...\nPress Enter Show Menu...");
+    println!("\n({}) Complete! Press Enter Show Menu...", choice);
     let pause = io::stdin().read_line(&mut pause);
     clear_screen();
 }
+
 fn main() -> Result<()> {
     loop {
         menu_items();
@@ -1316,7 +1400,7 @@ fn main() -> Result<()> {
             continue;
         }
         clear_screen();
-        println!("\n\n");
+        println!("\n");
 
         match choice {
             0 => {
@@ -1347,7 +1431,6 @@ fn main() -> Result<()> {
                 let small_box = ShippingBox::new(5.0, Colors::Red, small_dimensions);
 
                 small_box.print();
-                pause_screen();
             } // [ impl(2) ]
             3 => {
                 ownership();
@@ -1375,8 +1458,10 @@ fn main() -> Result<()> {
                 );
 
                 let numbers = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
                 let mut sum = 0;
-                for i in numbers {
+
+                for i in &numbers {
                     sum = sum + i;
                     println!(
                         "{:?} - {:?}",
@@ -1388,24 +1473,167 @@ fn main() -> Result<()> {
                         }
                     );
                 }
+
                 println!("Sum o numbers = {:?}", sum);
 
-                pause_screen();
+                let scores = vec![
+                    VecScore { score: 90 },
+                    VecScore { score: 88 },
+                    VecScore { score: 77 },
+                    VecScore { score: 93 },
+                ];
+
+                for score in scores {
+                    println!("Score = {:?}", score.score);
+                }
+
+                for i in numbers {
+                    match (i ^ 1) == (i + 1) {
+                        true => {
+                            println!("{:?} 는 짝수", i);
+                        }
+                        false => {
+                            println!("{:?} 는 홀수", i);
+                        }
+                    }
+                }
             } // [ Vector ]
+            5 => {
+                // String - owned
+                // &str - borrowd String slice
+                // Must use an owned String to store in a struct
+                // use &str when passing to a function
+
+                // Pass to function
+                print_it("a string slice");
+                let owned_string = "owned string".to_owned();
+                let another_owned = String::from("another");
+
+                print_it(&owned_string); // borrow
+                print_it(&another_owned); // borrow
+
+                let emp_name = "Jayson".to_owned();
+                let emp_name = String::from("Viv");
+                let emp = Employee { name: emp_name };
+                println!("{:?} - {}", emp.name, emp.name);
+
+                let receipt = vec![
+                    LineItem {
+                        name: "ceream".to_owned(),
+                        count: 1,
+                    },
+                    LineItem {
+                        name: String::from("fruit"),
+                        count: 3,
+                    },
+                ];
+
+                for item in receipt {
+                    print_name(&item.name);
+                    println!("{} {}", item.name, item.count);
+                }
+            } // [ String and &str A]
+            6 => {
+                //
+                let people = vec![
+                    PersonB {
+                        name: String::from("Viv"),
+                        fav_color: String::from("green"),
+                        age: 7,
+                    },
+                    PersonB {
+                        name: "JangGilSan".to_owned(),
+                        fav_color: String::from("Magenta"),
+                        age: 45,
+                    },
+                    PersonB {
+                        name: String::from("LimBa"),
+                        fav_color: String::from("SkyBlue"),
+                        age: 34,
+                    },
+                ];
+                for p in people {
+                    println!("\u{2766} {} {} {}", p.name, p.age, p.fav_color);
+                    if p.age <= 10 {
+                        print_person(&p.name);
+                    }
+                }
+            } // [ String adn &str B]
+
+            7 => {
+                // {:?} - 디버그 토큰 사용
+                // #[Derive(Debug)]
+                let me = Biz {
+                    position: Position::Worker,
+                    work_hours: 40,
+                };
+
+                println!("\u{2766} {:?}", me);
+                println!("\u{2766} {:?}", me.position);
+                print_biz(me); // First Copy
+                print_biz(me); // Second Copy
+            } // [ Derive ]
 
             // 4 => data_type(),
-            5 => println!("{}", add(25, 35)),
-            6 => expr(),
-            7 => expr_exercies(),
+            // 5 => println!("{}", add(25, 35)),
+            // 6 => expr(),
+            // 7 => expr_exercies(),
             8 => {
                 let (x, y) = (1, 2);
                 let s = sum(x, y); // 3
                 assert_eq!(s, 3);
                 println!("Success!");
-            }
+                let a = 123;
+                let b = 456;
+                // Comparison of boolena fuctions same = 0
+                // 홀수 인 짝인 판단.
+                // 패리티 비트 찾기
+                // 특정비트를 반전 시킬 때
+                // x ^ 0 = x
+                // x ^ x = 0
+
+                // 번호 맞 교환.
+                // x^= y    => (x ^ y, y)
+                // y ^= x   => (x ^ y, y ^ x ^ y)
+                // x ^= y   => (x ^ y ^ x, x)
+                //          => (y, x)
+
+                // 비트 뒤집기
+                // 0x0A ^ 0xFF = 0x03 (0000 1010 ^ 1111 1111 = 1111 0101)
+
+                // 누락된 숫자 찾기
+
+                // 0 으로 xor 을 수행하면 아무변화가 없으나
+                // 1 로 수행 하면 항상 비트가 토글됨.
+
+                // 암호화.
+
+                // 최대값
+
+                let mut array: [i32; 7] = [1, 1, 2, 2, 3, 4, 4];
+                let mut x = 0;
+                for i in array {
+                    x ^= i;
+                }
+                println!("\u{2766} 중복되지 않은 값 = {}", x);
+
+                println!("\u{2766} {} {}", a ^ a, a ^ b);
+
+                let result = 0;
+                let arr = vec![1, 2, 3, 4, 6, 7, 8, 9];
+
+                // 비트 토글 a = b ^ (1 << n)
+            } // XOR
             9 => while_statement(1),
             10 => matches_fn(),
-            11 => var_01(),
+            11 => {
+                // [ Recap ]
+                // Required for function signatures
+                // Types are usually inferred
+                // Can also be specified in code
+                // Explicti type annotations
+            } // [ Type Annotations ]
+            // 11 => var_01(),
             12 => var_02(),
             13 => data_types_01(),
             14 => loop_ex(10),
@@ -1423,12 +1651,22 @@ fn main() -> Result<()> {
             26 => random_number(),
             27 => if_statement(18),
             28 => number_types(),
-            29 => match_statement(18),
+            29 => {
+                /* Recap */
+                let n = 3;
+                match n {
+                    3 => println!("\u{2766} three {}", n),
+                    other => println!("\u{2766} number {:?}", other),
+                }
+                match_statement(18)
+            } // [ Advanced match ]
             30 => loops_ex(),
             31 => tuple_ex(),
             32 => string_ex(),
             33 => casting_ex(),
-            34 => enum_ex(Direction::Left),
+            34 => {
+                enum_ex(Direction::Left);
+            }
             35 => say_hello!(), // macros
             36 => write_ex(),
             37 => vector_ex(),
@@ -1575,7 +1813,7 @@ fn main() -> Result<()> {
                 // 구조체 사용 : 인스턴스 생성
 
                 // 일부 필드만 가변형으로 만들 수 없음.
-                let mut person_kim = Person {
+                let mut person_kim = PersonA {
                     active: true,
                     username: String::from("Kim Bum Jun"),
                     email: String::from("admin@vivabj.com"),
@@ -1708,6 +1946,7 @@ fn main() -> Result<()> {
             }
             _ => {}
         } // excute match
+        pause_screen(choice);
         println!("\n");
     }
 } // main
@@ -1802,7 +2041,7 @@ fn area(rect: &Rect) -> u32 {
     rect.width * rect.height
 }
 
-struct Person {
+struct PersonA {
     active: bool,
     username: String,
     email: String,
@@ -1817,8 +2056,8 @@ struct VivPoint(i32, i32, i32);
 // 테스트 용도로 사용됨.
 struct AlwaysSame;
 
-fn build_user(email: String, username: String) -> Person {
-    Person {
+fn build_user(email: String, username: String) -> PersonA {
+    PersonA {
         active: true,
         username,
         email,
