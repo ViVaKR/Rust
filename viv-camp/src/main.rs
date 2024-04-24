@@ -1183,6 +1183,7 @@ enum TicketDiscount {
     Percent(i32),
     Flat(i32),
 }
+
 struct Ticket {
     event: String,
     price: i32,
@@ -1572,6 +1573,12 @@ fn main() -> Result<()> {
                 println!("\u{2766} {:?}", me.position);
                 print_biz(me); // First Copy
                 print_biz(me); // Second Copy
+
+                let n = 3;
+                match n {
+                    3 => println!("\u{2766} three {:?}", n),
+                    other => println!("\u{2766} number: {:?}", other),
+                }
             } // [ Derive ]
 
             // 4 => data_type(),
