@@ -1,19 +1,22 @@
 #![allow(unused)]
-use rand::Rng; // (5)
-use std::any::Any;
-use std::cmp::Ordering;
-use std::convert::identity;
-// (4)
 use ansi_term::{Colour, Style};
 use data_encoding::HEXUPPER;
+use rand::Rng;
+use ring::agreement;
 use ring::digest::{Context, Digest, SHA256};
 use ring::error::Unspecified;
+use rusqlite::ffi::SQLITE_LIMIT_FUNCTION_ARG; // (5)
 use rusqlite::DatabaseName::Temp;
 use rusqlite::{params, Connection, Result};
+use std::any::Any;
+use std::cmp::Ordering;
+use std::collections::HashMap;
+use std::convert::identity;
 use std::fs::File;
 use std::io::{BufRead, BufReader, ErrorKind, Read, Write}; // (2)
 use std::mem::size_of_val;
-use std::process::exit;
+use std::path::PrefixComponent;
+use std::process::{exit, Child};
 use std::{array, io}; //  (1)
 
 // (3)
@@ -850,7 +853,7 @@ fn data_types_01() {
         println!("{:?}", i);
     }
 }
-fn var_02() {
+fn var_constant() {
     // constant
     const SECONDS_IN_MINUTE: u32 = 60;
     println!("{}", SECONDS_IN_MINUTE);
@@ -913,6 +916,7 @@ fn while_statement(mut a: i32) {
     }
 }
 
+/// Adds two numbers together.
 fn add(a: i32, b: i32) -> i32 {
     // body
     return a + b;
@@ -1186,7 +1190,7 @@ enum TicketDiscount {
 
 struct Ticket {
     event: String,
-    price: i32,
+    price: f32,
 }
 
 // enum
@@ -1356,15 +1360,18 @@ fn menu_items() {
     draw_line(" ( menu )", 40);
     menus(
         "\
-        1. Impl(1)\t2. Impl(2)\t3. Ownership (1)\t4. Vector\t5. String and &str (A)\n\
-        6. String and &str (B)\t7. Derive\t8. ...\t9. ... \t10. ...\n\
-        11. Type Annotations\t12. ... \t13. ... \t14. ... \t15. ... \n\
-        26. random number\t27. if statement\t28. number types\t29. match statement\t30. loop statement\n\
-        31. tuple \t32. string\t33. casting\t34. enum\t35. say_hello!\n\
-        36. write!\t37. vector_ex\t38. variables\t39. var\t40. ownership (2)\n\
-        41. function\t42. reference\t43. slice\t44. struct\t45. method\n\
-        46. ANSI Terminal\t47. sqlite db\t48. Enum Match\t49. Enum\t50. Boolean\n\
-        51. Intermediate Memory\t52. ...\t53. Boolean\t54. ...\t55. ...");
+        1. Impl(1)\t\t2. Impl(2)\t3. Ownership (1)\t4. Vector (1)\t5. String and &str (1)\n\
+        6. String and &str (2)\t7. Derive\t8. BitWise Operate\t9. While\t10. Match (1)\n\
+        11. Type Annotations\t12. Constant\t13. Data Types (1)\t14. Loop (1)\t15. User Input\n\
+        16. Arithmetic\t\t17. Condition\t18. Guess Game\t\t19. Shodowing\t20. Expression\n\
+        26. Random Number\t27. if\t\t28. Number Types\t29. Match (2)\t30. Loop (2)\n\
+        31. Tuple \t\t32. String\t33. Casting\t\t34. Enum (1)\t35. Say Hello!\n\
+        36. Write!\t\t37. Vector (2)\t38. Var (1)\t\t39. Var (2)\t40. OwnerShip (2)\n\
+        41. Function\t\t42. Reference\t43. Slice\t\t44. Struct\t45. Method\n\
+        46. ANSI Terminal\t47. Sqlite DB\t48. Enum Match\t\t49. Enum\t50. Boolean\n\
+        51. Intermediate Memory\t52. Match (3)\t53. Option Type\t\t54. Library API\t55. Result\n\
+        56. Hashmamp",
+    );
 
     draw_line(" ( end )", 40);
 }
@@ -1560,7 +1567,6 @@ fn main() -> Result<()> {
                     }
                 }
             } // [ String adn &str B]
-
             7 => {
                 // {:?} - 디버그 토큰 사용
                 // #[Derive(Debug)]
@@ -1580,11 +1586,6 @@ fn main() -> Result<()> {
                     other => println!("\u{2766} number: {:?}", other),
                 }
             } // [ Derive ]
-
-            // 4 => data_type(),
-            // 5 => println!("{}", add(25, 35)),
-            // 6 => expr(),
-            // 7 => expr_exercies(),
             8 => {
                 let (x, y) = (1, 2);
                 let s = sum(x, y); // 3
@@ -1631,8 +1632,8 @@ fn main() -> Result<()> {
 
                 // 비트 토글 a = b ^ (1 << n)
             } // XOR
-            9 => while_statement(1),
-            10 => matches_fn(),
+            9 => while_statement(1), // [ While statement]
+            10 => matches_fn(),      // [ Match ]
             11 => {
                 // [ Recap ]
                 // Required for function signatures
@@ -1641,15 +1642,22 @@ fn main() -> Result<()> {
                 // Explicti type annotations
             } // [ Type Annotations ]
             // 11 => var_01(),
-            12 => var_02(),
-            13 => data_types_01(),
+            12 => var_constant(), // [ Constant ]
+            13 => {
+                data_type();
+                data_types_01();
+            } // [ Data Type ]
             14 => loop_ex(10),
             15 => user_input(),
             16 => arithmethic(),
             17 => condition(),
-            18 => guess_game(),
+            18 => guess_game(), // [ Guess Game ]
             19 => shadowing(),
-            20 => _ = statement_expression(),
+            20 => {
+                expr();
+                expr_exercies();
+                _ = statement_expression();
+            } // [ Expressions ]
             21 => five_caller(),
             22 => control_flow(rand::thread_rng().gen_range(1..=100)),
             23 => ownership(),
@@ -1673,7 +1681,7 @@ fn main() -> Result<()> {
             33 => casting_ex(),
             34 => {
                 enum_ex(Direction::Left);
-            }
+            } // [ Enum (1) ]
             35 => say_hello!(), // macros
             36 => write_ex(),
             37 => vector_ex(),
@@ -1767,7 +1775,7 @@ fn main() -> Result<()> {
                 // [ 참조자 규칙 ]
                 // 단 하난의 가변 참조자만 갖거나, 여러개의 불변 참조자를 가질 수 있음.
                 // 참조자는 항상 유효해야 합니다.
-            } // 참조, reference
+            } // [ 참조, Reference ]
             43 => {
                 // 문자열 슬라이스, slice
                 // `&str` : 문자열 슬라이스를 나타내는 타입
@@ -1811,7 +1819,7 @@ fn main() -> Result<()> {
                 assert_eq!(slice, &[2, 3]);
 
                 // 소유권, 참조, 슬라이스는 컴파일 타임에 메모리 안정성을 보장.
-            } // slice
+            } // [ Slice ]
             44 => {
                 // 구조체.
                 // 튜플과 같이 각각 다른 타입의 구성요소를 가질수 있음.
@@ -1852,7 +1860,7 @@ fn main() -> Result<()> {
                 println!("30 * 50 area = {}", area);
                 println!("rect is {:?}", rect);
                 dbg!(&rect);
-            } // struct, 구조체
+            } // [ Struct, 구조체 ]
             45 => {
                 // 함수와 유사하나
                 // 구조체 컨텍스트에 정의되고
@@ -1897,12 +1905,12 @@ fn main() -> Result<()> {
                     Style::new().bold().paint("This is Bold"),
                     Colour::Yellow.paint("This is colored"),
                 );
-            }
+            } // [ Ansi Color Enum ]
             47 => {
                 //
                 let result = sqlite_db();
                 println!("{}", result.iter().enumerate().len());
-            }
+            } // [ Sqlite DB ]
             48 => {
                 //
                 let item = Menu::Burger;
@@ -1951,6 +1959,181 @@ fn main() -> Result<()> {
                 // Addresses are permanent, data difers
                 // Offsets can be used to "index" into some data
             }
+            52 => {
+                // Advanced match
+                let flat = TicketDiscount::Flat(2);
+                match flat {
+                    TicketDiscount::Flat(2) => println!("flat 2"),
+                    TicketDiscount::Flat(amount) => println!("flat discount of {:?}", amount),
+                    _ => (),
+                }
+
+                let concert = Ticket {
+                    event: "concert".to_owned(),
+                    price: 50.0,
+                };
+
+                match concert {
+                    Ticket { price, .. } => println!("price = {:?}", price), // ignore others (two dot ..)
+                }
+
+                // Advanced match
+                let tks = vec![
+                    AdvTicket::Backstage(50.0, "Viv".to_owned()),
+                    AdvTicket::Standard(15.0, "Hello".to_owned()),
+                    AdvTicket::Vip(30.0, "Amy".to_owned()),
+                ];
+
+                for item in tks {
+                    match item {
+                        AdvTicket::Backstage(price, holder) => {
+                            println!("Backstage Ticket Holder: {:?}, price: {:?}", holder, price)
+                        }
+                        AdvTicket::Standard(price, holder) => {
+                            println!("Hello Ticket Holder: {:?}, price: {:?}", holder, price)
+                        }
+                        AdvTicket::Vip(price, holder) => {
+                            println!("Vip Ticket Holder: {:?}, price: {:?}", holder, price)
+                        }
+                    }
+                }
+            } // Advanced match
+
+            53 => {
+                // - Some data of a specified type
+                // - Nothing
+
+                // Scenarios
+                // 1. Unable to find something
+                // 2. Ran out of items in a list
+                // 3. Form field not filled out
+
+                let viv = Customer {
+                    age: Some(22),
+                    email: "viv@example.com".to_owned(),
+                };
+
+                let becky = Customer {
+                    age: None,
+                    email: "becky@example.com".to_owned(),
+                };
+
+                match becky.age {
+                    Some(age) => println!("customer is {:?} years old", age),
+                    None => println!("customer age not provided"),
+                }
+
+                println!("Check Bread {:?}", find_quantity("bread"));
+
+                let response = Survey {
+                    q1: None,
+                    q2: Some(true),
+                    q3: Some("A".to_owned()),
+                };
+
+                match response.q1 {
+                    Some(ans) => println!("q1: {:?}", ans),
+                    None => println!("q1: no response"),
+                }
+
+                match response.q2 {
+                    Some(ans) => println!("q2: {:?}", ans),
+                    None => println!("q2: no response"),
+                }
+
+                match response.q3 {
+                    Some(ans) => println!("q3: {:?}", ans),
+                    None => println!("q3: no response"),
+                }
+
+                let mary = Student {
+                    name: "Mary".to_owned(),
+                    locker: Some(3),
+                };
+                println!("student : {:?}", mary.name);
+
+                match mary.locker {
+                    Some(num) => println!("locker number: {:?}", num),
+                    None => println!("no locker assigned"),
+                }
+            } // [ Option (Data) Type ]
+
+            /// Library API
+            /// $ `cargo doc --open`
+            /// $ `rustup doc``
+            54 => {
+                //
+                let numbers = vec![1, 2, 3];
+                match numbers.is_empty() {
+                    true => println!("Is Empty"),
+                    false => println!("Is Not Empty"),
+                }
+
+                // Utilizing Standard Library functionality (표준라이브러리 기능 활용)
+                // Notes
+                // * Use 'rustup doc' in a terminal top open the standard library docs
+                // * navigate to the API Documentation section
+                // * Search for functionality to transform a string (or str) to uppercase and lowercase
+                //      * Try  searching for: to_uppercase, to_lowercase
+
+                let my_str = "this is my STRING";
+                println!(
+                    "uppercase: {:?}, lowercase: {:?}",
+                    my_str.to_uppercase(),
+                    my_str.to_lowercase()
+                );
+
+                //
+            } // [ Libarary API ]
+
+            55 => {
+                // Succesful
+                // Error
+
+                // 최적화.
+                let choice = pick_choice("end");
+                println!("choice: {:?}", choice);
+
+                // Adult
+                let child = Adult::new(15, "Anita");
+                let adult = Adult::new(21, "Viv");
+                match child {
+                    Ok(child) => println!("{} is {} years old", child.name, child.age),
+                    Err(err) => println!("{err}"),
+                }
+
+                match adult {
+                    Ok(adult) => println!("{} is {} years old", adult.name, adult.age),
+                    Err(e) => println!("{e}"),
+                }
+
+                // Result
+            } /* [ Result ] */
+
+            56 => {
+                // HashMap //
+                // --> Collection that stores data as key-value pairs
+                // --> Data is located using the "key"
+                // --> The data is the "value"
+
+                // Similar to definitions in a dictionary
+                // Vary fast to retrieve data usin the key
+
+                let mut people = HashMap::new();
+                people.insert("Susan", 21);
+                people.insert("Viv", 32);
+                people.insert("Will", 14);
+                people.insert("Cathy", 22);
+                people.remove("Susan");
+
+                match people.get("Ed") {
+                    Some(age) => println!("age = {:?}", age),
+                    None => println!("not found"),
+                }
+            } // [ HashMap ]
+
+            57 => {} // [ Macro ]
+
             _ => {}
         } // excute match
         pause_screen(choice);
@@ -1958,7 +2141,107 @@ fn main() -> Result<()> {
     }
 } // main
 
-// borrow
+// (56) HashMap
+/// (55) Result
+#[derive(Debug)]
+enum MenuChoice {
+    MainMenu,
+    Start,
+    Quit,
+}
+
+#[derive(Debug)]
+struct Adult {
+    age: u8,
+    name: String,
+}
+
+impl Adult {
+    fn new(age: u8, name: &str) -> Result<Self, &str> {
+        if age >= 21 {
+            Ok(Self {
+                age,
+                name: name.to_owned(),
+            })
+        } else {
+            Err("Age must be at least 21")
+        }
+    }
+}
+fn print_menu(choice: &MenuChoice) {
+    println!("choice => {:?}", choice);
+}
+
+fn pick_choice(input: &str) -> Result<(), String> {
+    let choice: MenuChoice = get_choice(input)?;
+    print_menu(&choice);
+    Ok(())
+}
+
+fn get_choice(input: &str) -> Result<MenuChoice, String> {
+    match input {
+        "mainmenu" => Ok(MenuChoice::MainMenu),
+        "start" => Ok(MenuChoice::Start),
+        "quit" => Ok(MenuChoice::Quit),
+        _ => Err("Menu not found!".to_owned()),
+    }
+}
+
+/// (53) Option Data Type
+struct Customer {
+    age: Option<i32>,
+    email: String,
+}
+
+struct StoreItem {
+    name: String,
+    qty: i32,
+}
+
+fn find_quantity(name: &str) -> Option<i32> {
+    let items = vec![
+        StoreItem {
+            name: "bananas".to_owned(),
+            qty: 4,
+        },
+        StoreItem {
+            name: "eggs".to_owned(),
+            qty: 12,
+        },
+        StoreItem {
+            name: "bread".to_owned(),
+            qty: 45,
+        },
+    ];
+
+    for item in items {
+        if item.name == name {
+            return Some(item.qty);
+        }
+    }
+
+    return None;
+}
+
+struct Student {
+    name: String,
+    locker: Option<i32>,
+}
+
+/// (52) Advanced match
+enum AdvTicket {
+    Backstage(f64, String),
+    Standard(f64, String),
+    Vip(f64, String),
+}
+
+struct Survey {
+    q1: Option<i32>,
+    q2: Option<bool>,
+    q3: Option<String>,
+}
+
+/// borrow
 fn borrow_right(acc: &Access) {
     match acc {
         Access::Admin => {}
@@ -2009,7 +2292,7 @@ fn sqlite_db() -> Result<()> {
     Ok(())
 }
 
-// [ impl ]
+/// [ impl ]
 // implementation, 구현
 // Rect 컨텍스트에 함수를 정의하기 위해서
 // Rect 에 대한 impl 블럭을 만드는 것으로 시작함.
