@@ -1,10 +1,7 @@
-use chrono::{self, Local, Offset};
+use chrono::{DateTime, Local};
 
 pub fn connect() {
-    // returns DateTime<Local>
-    println!("{:?}", Local::now());
+    let now: DateTime<Local> = Local::now();
 
-    // returns DateTime<Utc>
-    // NOTE: Available on crate feature *clock* only.
-    println!("{:?}", Utc::now());
+    println!("{}", now.format("%Y-%m-%d %H:%M:%S"));
 }
