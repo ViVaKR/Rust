@@ -1,20 +1,20 @@
+workspace = { members = ["communicator", "util"] }
+
 [package]
-name = "viv_camp"
+name = "viv_tutorial"
 version = "0.1.0"
-rust-version = "1.76.0"
 edition = "2021"
 authors = ["Kim Bum Jun <admin@vivabj.com>"]
 homepage = "https://vivabm.com"
 readme = "README.md"
 repository = "https://github.com/ViVaKR/Rust.git"
 license = "MIT"
-description = "BootCamp Project"
-keywords = ["bootcamp", "beginner"]
 
 [dependencies]
+util = { path = "util" }
+communicator = { path = "communicator" }
 rand = "0.8.5"
-ring = "0.17.8"
 data-encoding = "2.5.0"
 ansi_term = "0.12.1"
 rusqlite = "0.31.0"
-#cates.io
+ring = "0.17.8"

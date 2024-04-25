@@ -1,1 +1,1 @@
-cargo run -q --bin viv-camp
+cargo run -q --bin viv_camp

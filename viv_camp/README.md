@@ -24,8 +24,9 @@
             - binary : `0b111_0000`
             - byte (u8) : `b'a'`
 
-    - Float
-      - 
+- Float
+      -
+
 - Compound
     - Tuple Type
 - Functions:
@@ -49,22 +50,16 @@
     -
 
 -----------
+
 [ 낮은 주소 ]
 -----------
 
-
-
 ------------
+
 [ 높은 주소 ]
 ------------
 
 ```bash
-$ cargo run -q --bin viv-camp
+cargo run -q --bin viv-camp
 
 ```
-
-
-
-
-
-
