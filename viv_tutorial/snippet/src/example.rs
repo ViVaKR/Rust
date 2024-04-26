@@ -1,3 +1,6 @@
+#![allow(dead_code)]
+
+use std::collections::BinaryHeap;
 pub(crate) use std::time::Duration;
 
 pub fn std_fmt() {
@@ -132,6 +135,22 @@ pub fn array_ex() {
     for item in x2.map(|v| v.len()) {
         println!("\u{26EC} {}", item);
     }
+
+    let floats = [3.1, 2.7, -1.0];
+    let float_refs = floats.each_ref();
+    for i in float_refs {
+        println!("\n\u{26EC} float_refs = {}", i);
+    }
+
+    let strings = ["Ferris", "\u{2766}", "Rust"];
+    let is_ascii = strings.each_ref().map(|s| s.is_ascii());
+    for i in is_ascii {
+        println!("\u{26EC} - {}", i);
+    }
+    println!("\u{26EC} {}", strings.len());
+
+    let h1 = BinaryHeap::from([1, 4, 2, 3]);
+    println!("\u{26EC} -> {}", i);
 }
 
 pub enum Operator {
@@ -155,3 +174,6 @@ pub fn devide_by(a: f64, b: f64, operator: Operator) -> Option<f64> {
         }
     }
 }
+
+/// Enums
+enum Person {}
