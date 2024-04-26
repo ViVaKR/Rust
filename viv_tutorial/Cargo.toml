@@ -1,4 +1,4 @@
-workspace = { members = ["communicator", "util"] }
+workspace = { members = ["communicator", "snippet", "util"] }
 
 [package]
 name = "viv_tutorial"
@@ -11,6 +11,7 @@ repository = "https://github.com/ViVaKR/Rust.git"
 license = "MIT"
 
 [dependencies]
+snippet = { path = "snippet" }
 util = { path = "util" }
 communicator = { path = "communicator" }
 rand = "0.8.5"
@@ -18,3 +19,4 @@ data-encoding = "2.5.0"
 ansi_term = "0.12.1"
 rusqlite = "0.31.0"
 ring = "0.17.8"
+clearscreen = "3.0.0"

@@ -1,9 +1,18 @@
 # Rust
 
 ```bash
+    cargo new viv_tutorial --bin
+    cargo new snippet --lib
     cargo build
     cargo check # 실행파일은 생성하지 않음.
+    cargo --version
+    cargo new hello_world --bin
+    cargo build
+    cargo check
     cargo run -q
+    restup update
+    rustc --version
+    rustup doc
 ```
 
 ## 매크로(Macro)

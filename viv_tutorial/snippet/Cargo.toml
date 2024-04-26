@@ -1,10 +1,12 @@
 [package]
-name = "util"
+name = "snippet"
 version = "0.1.0"
 edition = "2021"
+authors = ["Kim Bum Jun <admin@vivabj.com>"]
+license = "MIT"
 
 [dependencies]
-chrono = "0.4.38"
 itertools = "0.12.1"
 ansi_term = "0.12.1"
 rand = "0.8.5"
+chrono = "0.4.38"
