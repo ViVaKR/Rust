@@ -1,4 +1,4 @@
-workspace = { members = ["communicator", "snippet", "util"] }
+workspace = { members = ["common", "communicator", "snippet", "util"] }
 
 [package]
 name = "viv_tutorial"
@@ -11,6 +11,7 @@ repository = "https://github.com/ViVaKR/Rust.git"
 license = "MIT"
 
 [dependencies]
+common = { path = "common" }
 snippet = { path = "snippet" }
 util = { path = "util" }
 communicator = { path = "communicator" }

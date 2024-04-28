@@ -10,11 +10,17 @@ use std::io::{self, Write};
 pub fn display_menu() {
     let mut menus: HashMap<u32, String> = HashMap::new();
 
-    menus.insert(0, String::from("Quit"));
+    menus.insert(0, String::from("Quit\t"));
     menus.insert(1, String::from("Random"));
     menus.insert(2, String::from("Array"));
     menus.insert(3, String::from("Format"));
     menus.insert(4, String::from("Option"));
+    menus.insert(5, String::from("DataType"));
+    menus.insert(6, String::from("Operation"));
+    menus.insert(7, String::from("Function"));
+    menus.insert(8, String::from("Loop\t"));
+    menus.insert(9, String::from("OwnerShip"));
+    menus.insert(10, String::from("PrimeNumber"));
 
     let now: DateTime<Local> = Local::now();
 
@@ -22,6 +28,7 @@ pub fn display_menu() {
         "\n\u{2772} {current} \u{2773}\n\u{2728} 실행할 메뉴를 선택하세요 \u{2728}",
         current = now.format("%Y-%m-%d %H:%M:%S")
     );
+
     for (key, value) in menus.iter().sorted() {
         print!("{}. {}\t\t", key, value);
         if (key + 1) % 5 == 0 {

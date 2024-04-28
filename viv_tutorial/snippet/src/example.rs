@@ -1,6 +1,3 @@
-#![allow(dead_code)]
-
-use std::collections::BinaryHeap;
 pub(crate) use std::time::Duration;
 
 pub fn std_fmt() {
@@ -148,9 +145,6 @@ pub fn array_ex() {
         println!("\u{26EC} - {}", i);
     }
     println!("\u{26EC} {}", strings.len());
-
-    let h1 = BinaryHeap::from([1, 4, 2, 3]);
-    println!("\u{26EC} -> {}", i);
 }
 
 pub enum Operator {
@@ -174,6 +168,3 @@ pub fn devide_by(a: f64, b: f64, operator: Operator) -> Option<f64> {
         }
     }
 }
-
-/// Enums
-enum Person {}

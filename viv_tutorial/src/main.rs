@@ -1,3 +1,10 @@
+use common::{
+    algorithm::is_prime,
+    datatype::{data_type, operation},
+    function::function,
+    loop_a::{for_a, for_b, loop_a, loop_b, while_a},
+    ownership::ownership_a,
+};
 use snippet::example::{array_ex, devide_by, std_fmt, Operator};
 use std::{io, process, time::Instant};
 use util::start;
@@ -48,6 +55,40 @@ fn main() {
                         println!("\u{26EC} {} + {} = {:.3}", a, b, rs);
                     }
                     None => println!("\u{26EC} 0",),
+                }
+            }
+
+            5 => {
+                data_type();
+            }
+            6 => {
+                operation();
+            }
+
+            7 => {
+                function();
+            }
+
+            8 => {
+                loop_a();
+                loop_b();
+                while_a();
+                for_a();
+                for_b();
+            }
+
+            9 => {
+                ownership_a();
+            }
+
+            10 => {
+                for i in (2..100).into_iter().enumerate() {
+                    let prime = if is_prime(i.1, 2) {
+                        "소수".to_owned()
+                    } else {
+                        "-".to_owned()
+                    };
+                    println!("\u{26EC} {} {}", i.1, prime);
                 }
             }
 
