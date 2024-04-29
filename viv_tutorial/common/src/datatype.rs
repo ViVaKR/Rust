@@ -109,3 +109,26 @@ pub fn operation() {
         sum, difference, product, quotient, remainder, t, f, c, z
     );
 }
+
+pub fn vector() {
+    // 벡터 만들기
+    let mut v: Vec<i32> = Vec::new();
+    v.push(5);
+    v.push(7);
+    v.push(11);
+    v.push(14);
+    v.push(33);
+
+    let third = &v[2];
+
+    println!("\u{26EC} vec = {:?} third = {}", v, third);
+    let last = v.get(v.len() - 1);
+
+    match last {
+        Some(val) => println!("\u{26EC} last = {}", val),
+        None => todo!(),
+    }
+
+    let v2 = vec![1, 2, 3];
+    println!("\u{26EC} v2 = {:?}", v2);
+}

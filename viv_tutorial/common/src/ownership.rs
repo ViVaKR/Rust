@@ -110,3 +110,25 @@ fn gives_ownership() -> String {
 fn takes_and_gives_back(a_string: String) -> String {
     a_string // 호출자 함수 쪽으로 이동함.
 }
+
+pub fn first_wrod(s: &String) -> &str {
+    // &str : 문자열 슬라이스
+    // as_bytes() : 바이트 배열로 변환.
+    let bytes = s.as_bytes();
+
+    // iter() : 컬렉션의 각 요소 반환
+    // enumerate() : iter 의 각 결과값을 튜플로 감싸 반환 (인덱스, 해당요소의 참조자)
+    let tuple = bytes.iter().enumerate();
+
+    for (i, &item) in tuple {
+        if item == b' ' {
+            return &s[0..i];
+        }
+    }
+
+    &s[..]
+}
+
+pub fn first_wrod_ref(s: &str) -> &str {
+    &s[..5]
+}

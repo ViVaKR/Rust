@@ -10,7 +10,7 @@ use std::io::{self, Write};
 pub fn display_menu() {
     let mut menus: HashMap<u32, String> = HashMap::new();
 
-    menus.insert(0, String::from("Quit\t"));
+    menus.insert(0, String::from("Quit"));
     menus.insert(1, String::from("Random"));
     menus.insert(2, String::from("Array"));
     menus.insert(3, String::from("Format"));
@@ -18,9 +18,16 @@ pub fn display_menu() {
     menus.insert(5, String::from("DataType"));
     menus.insert(6, String::from("Operation"));
     menus.insert(7, String::from("Function"));
-    menus.insert(8, String::from("Loop\t"));
+    menus.insert(8, String::from("Loop"));
     menus.insert(9, String::from("OwnerShip"));
     menus.insert(10, String::from("PrimeNumber"));
+    menus.insert(11, String::from("Fibonacci"));
+    menus.insert(12, String::from("Closuers"));
+    menus.insert(13, String::from("부동소숫점"));
+    menus.insert(14, String::from("반복자"));
+    menus.insert(15, String::from("Vector"));
+    menus.insert(16, String::from("Option"));
+    menus.insert(17, String::from("Trait"));
 
     let now: DateTime<Local> = Local::now();
 
@@ -30,7 +37,7 @@ pub fn display_menu() {
     );
 
     for (key, value) in menus.iter().sorted() {
-        print!("{}. {}\t\t", key, value);
+        print!("{:>2}. {}\t\t", key, value);
         if (key + 1) % 5 == 0 {
             println!();
         }
