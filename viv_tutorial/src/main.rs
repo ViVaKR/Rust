@@ -2,16 +2,25 @@ use common::{
     algorithm::{fibnacci, is_prime},
     closures::{capture_types, sort_list, Inventory, ShirtColor},
     datatype::{data_type, operation, vector},
-    function::function,
+    function::{function, largest_char, largest_i32},
+    generic::{generic_run, longest},
     interface::runner,
     iterator::{iter_filter, iter_map, iter_repeat},
     loop_a::{for_a, for_b, loop_a, loop_b, while_a},
     ownership::{first_wrod, first_wrod_ref, ownership_a},
+    panic_result::{panic_run, result_run, Guess},
     some::{check_optional, divide},
+    structs::struct_run,
 };
 use rust_decimal_macros::dec;
 use snippet::example::{array_ex, devide_by, std_fmt, Operator};
-use std::{io, process, time::Instant};
+use std::{
+    env,
+    fs::File,
+    io::{self, Read},
+    process,
+    time::Instant,
+};
 use util::start;
 
 extern crate communicator;
@@ -19,14 +28,25 @@ extern crate snippet;
 extern crate util;
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    let filename = &args[1];
+
+    let mut file = File::open(filename).expect("file not found");
+
+    let mut contents = String::new();
+
+    file.read_to_string(&mut contents)
+        .expect("Something went wrong reading the file");
+
+    println!("\u{26EC} With text:\n{}", contents);
+
     //clear_screen();
     let now = Instant::now();
     loop {
         start::display_menu();
         let choice: i32 = start::choice_menu();
-
         //clear_screen();
-
         match choice {
             -1 => {
                 println!("잘못된 메뉴 선택입니다.");
@@ -78,6 +98,17 @@ fn main() {
 
             7 => {
                 function();
+
+                // 제너릭
+                let numbers = vec![34, 50, 25, 100, 65];
+                let result = largest_i32(&numbers);
+                // let result = largest(&numbers);
+                println!("\u{26EC} The largest number is {}", result);
+
+                let chars = vec!['y', 'm', 'a', 'q'];
+                let result = largest_char(&chars);
+                // let resutl = largest(&char);
+                println!("\u{26EC} The largest char is {}", result);
             }
 
             8 => {
@@ -249,6 +280,57 @@ fn main() {
                 println!("\n\u{269E} Trait \u{269F}");
                 runner();
             } // [ Trait (interface) ]
+
+            18 => {
+                struct_run();
+            } // [ struct, impl ]
+
+            19 => {
+                let rs = result_run();
+
+                match rs {
+                    Ok(ok) => println!("\u{26EC} Ok: {} ", ok),
+                    Err(err) => println!("\u{26EC} Error: {}", err),
+                }
+
+                panic_run();
+
+                let guess = Guess::new(55);
+                println!("\u{26EC} Guess: {}", guess.value);
+            } // [ panic & result ]
+
+            20 => {
+                generic_run();
+
+                {
+                    let x = 5;
+                    let r = &x;
+                    println!("\u{26EC} r: {}", r);
+                }
+
+                // 라이프타임 명시 문법 : 어퍼스트로피 ' 로 시작.
+                // 제너릭 라이프타미 파라미터 : <'a>
+                // &i32 : a reference
+                // 'a i32  : a reference with an explicit lifetime.
+                // 'a mut i32 : a mutable reference with an explicit lifetime.
+                /*
+                 --> &i32       : 참조
+                 --> &'a i32     : 명시적인 수명을 가진 참조입니다.
+                 --> &'a mut i32 : 명시적인 수명을 가진 변경 가능한 참조입니다.
+                */
+
+                let string1 = String::from("long string is long");
+                {
+                    let string2 = String::from("xyz");
+                    let result = longest(string1.as_str(), string2.as_str());
+                    println!("\u{26EC} The longest string is {}", result)
+                }
+
+                let novel = String::from("Call me Ishmael. Some years age...");
+                let first_sentence = novel.split('.').next().expect("Could not find a '.'");
+
+                println!("\u{26EC} first_sentence: {}", first_sentence);
+            } // [ 제너릭, Generic ]
 
             _ => {
                 continue;

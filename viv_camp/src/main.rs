@@ -1299,6 +1299,7 @@ impl ShippingBox {
         println!("weight: {:?}", self.weight);
     }
 }
+
 /* Vector */
 struct VecScore {
     score: i32,

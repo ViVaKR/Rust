@@ -1,3 +1,3 @@
 #! /usr/bin/env zsh
 
-cargo run -q
+cargo run demo.txt -q

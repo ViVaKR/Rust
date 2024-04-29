@@ -28,6 +28,9 @@ pub fn display_menu() {
     menus.insert(15, String::from("Vector"));
     menus.insert(16, String::from("Option"));
     menus.insert(17, String::from("Trait"));
+    menus.insert(18, String::from("Structs"));
+    menus.insert(19, String::from("PanicResult"));
+    menus.insert(20, String::from("Generic"));
 
     let now: DateTime<Local> = Local::now();
 

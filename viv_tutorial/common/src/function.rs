@@ -30,3 +30,37 @@ fn five(tf: bool) -> i32 {
 fn plus_one(x: i32) -> i32 {
     x + 100
 }
+
+pub fn largest_i32(list: &[i32]) -> i32 {
+    let mut largest = list[0];
+
+    for &item in list.iter() {
+        if item > largest {
+            largest = item;
+        }
+    }
+    largest
+}
+
+pub fn largest_char(list: &[char]) -> char {
+    let mut largest = list[0];
+    for &item in list.iter() {
+        if item > largest {
+            largest = item;
+        }
+    }
+    largest
+}
+
+// Generic
+// pub fn largest<T>(list: &[T]) -> T {
+//     let mut largest = list[0];
+
+//     for &item in list.iter() {
+//         if item > largest {
+//             largest = item;
+//         }
+//     }
+
+//     largest
+// }
