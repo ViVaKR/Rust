@@ -10,7 +10,7 @@ use std::io::{self, Write};
 pub fn display_menu() {
     let mut menus: HashMap<u32, String> = HashMap::new();
 
-    menus.insert(0, String::from("Quit"));
+    menus.insert(0, String::from("Quit\t"));
     menus.insert(1, String::from("Random"));
     menus.insert(2, String::from("Array"));
     menus.insert(3, String::from("Format"));
@@ -31,6 +31,9 @@ pub fn display_menu() {
     menus.insert(18, String::from("Structs"));
     menus.insert(19, String::from("PanicResult"));
     menus.insert(20, String::from("Generic"));
+    menus.insert(21, String::from("Bits"));
+    menus.insert(22, String::from("Sort"));
+    menus.insert(23, String::from("Colour"));
 
     let now: DateTime<Local> = Local::now();
 
@@ -40,13 +43,17 @@ pub fn display_menu() {
     );
 
     for (key, value) in menus.iter().sorted() {
-        print!("{:>2}. {}\t\t", key, value);
+        print!(
+            "\x1b[32m{:>2}.\x1b[0m {}\t\t",
+            key,
+            Colour::Green.paint(value)
+        );
         if (key + 1) % 5 == 0 {
             println!();
         }
     }
 
-    println!("\n\x1b[31m\u{2766} Select Menu\x1b[0m");
+    println!("\n\x1b[32m\u{2766} Select Menu\x1b[0m");
     print!("{}  ", Colour::Yellow.paint("\u{26DF}"));
     io::stdout().flush().unwrap();
 }

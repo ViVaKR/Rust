@@ -1,3 +1,4 @@
+use ansi_term::{Colour, Style};
 use common::{
     algorithm::{fibnacci, is_prime},
     closures::{capture_types, sort_list, Inventory, ShirtColor},
@@ -12,9 +13,15 @@ use common::{
     some::{check_optional, divide},
     structs::struct_run,
 };
+use rand::{
+    distributions::{Distribution, Uniform},
+    thread_rng, Rng,
+};
+use rand_distr::{Alphanumeric, Normal, NormalError};
 use rust_decimal_macros::dec;
 use snippet::example::{array_ex, devide_by, std_fmt, Operator};
 use std::{
+    cmp::Reverse,
     env,
     fs::File,
     io::{self, Read},
@@ -27,25 +34,38 @@ extern crate communicator;
 extern crate snippet;
 extern crate util;
 
-fn main() {
+/// --> main
+/// --> (run) $ ./run.sh <menu choice number>
+fn main() -> Result<(), NormalError> {
     let args: Vec<String> = env::args().collect();
-
     let filename = &args[1];
+    let selection = &args[2];
 
     let mut file = File::open(filename).expect("file not found");
-
     let mut contents = String::new();
-
     file.read_to_string(&mut contents)
         .expect("Something went wrong reading the file");
+    println!("\u{26EC} Welcom: {}", contents);
 
-    println!("\u{26EC} With text:\n{}", contents);
+    let mut arg_num = 0;
+    if let Ok(val) = selection.trim().parse::<i32>() {
+        arg_num = val;
+    }
+
+    #[cfg(target_endian = "big")]
+    println!("This is a BigEndian system.");
+    #[cfg(target_endian = "little")]
+    println!("This is a LittleEndian system.");
 
     //clear_screen();
     let now = Instant::now();
     loop {
         start::display_menu();
-        let choice: i32 = start::choice_menu();
+        let choice: i32 = if arg_num > 0 {
+            arg_num
+        } else {
+            start::choice_menu()
+        };
         //clear_screen();
         match choice {
             -1 => {
@@ -58,13 +78,70 @@ fn main() {
             } /* [ 0. Exit ] */
 
             1 => {
-                //
+                let mut rng = rand::thread_rng();
+                for _ in 1..=2 {
+                    let _u8 = rng.gen::<u8>();
+                    let _u16 = rng.gen::<u16>();
+                    let _u32 = rng.gen::<u32>();
+                    let _i32 = rng.gen::<i32>();
+                    let _f64 = rng.gen::<f64>(); // 1
 
-                let x = Some(5);
-                match x {
-                    Some(n) => println!("\u{26EC} {}", n),
-                    None => todo!(),
+                    println!(
+                        "\nu8:\t{} \
+                        \nu16:\t{} \
+                        \nu32:\t{} \
+                        \ni32:\t{} \
+                        \nf64:\t{}",
+                        _u8, _u16, _u32, _i32, _f64
+                    );
                 }
+
+                // 범위 내에서 난수 생성
+                let ra = rng.gen_range(1..=10);
+                let rb = rng.gen_range(1.0..=10.0);
+                println!("\u{26EC} integer random: {}\nfloat random: {} ", ra, rb);
+
+                // 균일한 분포, Uniform
+                let die = Uniform::from(1..7);
+
+                loop {
+                    let throw = die.sample(&mut rng);
+                    println!("\u{26EC} Roll the die: {}", throw);
+                    if throw == 6 {
+                        break;
+                    }
+                }
+
+                // 주어진 분포로 난수를 생성
+                let noraml = Normal::new(2.0, 3.0)?;
+                let v = noraml.sample(&mut rng);
+                println!("\u{26EC} {} is from a N(2, 9) distrubution", v);
+
+                // Random Tuple
+                let rand_tuple = rng.gen::<(i32, bool, f64)>();
+                println!("\u{26EC} Random tuple: {:?}", rand_tuple);
+
+                // Random Char
+                let rand_string: String = thread_rng()
+                    .sample_iter(&Alphanumeric)
+                    .take(30)
+                    .map(char::from)
+                    .collect();
+
+                println!("\u{26EC} Random String: {}", rand_string);
+
+                // 사용자 정의 문자 세트에서 임으의 비밀번호
+                const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ\
+                                        abcdefghijklmnopqrstuvwxyz\
+                                        0123456789)(*&^%$#@!~";
+                const PASSWORD_LEN: usize = 30;
+                let password: String = (0..PASSWORD_LEN)
+                    .map(|_| {
+                        let idx = rng.gen_range(0..CHARSET.len());
+                        CHARSET[idx] as char
+                    })
+                    .collect();
+                println!("\u{26EC} Password: {}", password);
             } /* [ 1. Random ] */
 
             2 => {
@@ -332,6 +409,85 @@ fn main() {
                 println!("\u{26EC} first_sentence: {}", first_sentence);
             } // [ 제너릭, Generic ]
 
+            21 => {
+                let n = 0b1010_1110isize;
+                let one = 1isize;
+                let num = 0x1Aisize;
+
+                if cfg!(target_endian = "big") {
+                    println!(
+                        "\nBig Endian: {:#x}\nto_be: {:#x}\nSwap Bytes: {:#x}",
+                        num,
+                        num.to_be(),
+                        num.swap_bytes()
+                    );
+                } else {
+                    println!(
+                        "\nLittle Endian: {:#x}\nto_be: {:#x}\nSwap Bytes: {:#x}",
+                        num, // 0x0000_0000_0000_001a
+                        num.to_be(),
+                        num.swap_bytes() // 0x1a00_0000_0000_0000
+                    );
+                }
+
+                println!(
+                    "\u{26EC}\n{:#064b} ({})\n{:#016b}\n{:#016b}\n{:#016b}\n{:#016b} ({})\n{:#016b}",
+                    n,
+                    n,
+                    n.swap_bytes(),
+                    one,
+                    one.rotate_left(3),
+                    one.swap_bytes(),
+                    one.swap_bytes(),
+                    num
+                );
+            }
+
+            22 => {
+                let mut vec = vec![1, 5, 3, 10, 2, 15];
+                println!("\u{26EC} [ Vector Sort ]\n\t- Origin: {:?}", vec);
+                vec.sort();
+                println!("\u{26EC} Sort ASC: {:?}", vec);
+                vec.reverse();
+                println!("\u{26EC} Sort DESC: {:?}", vec);
+
+                vec.sort_by_key(|x| Reverse(*x));
+                println!("\u{26EC} Sort by key: {:?}", vec);
+
+                // float
+                let mut vec = vec![1.1, 1.15, 5.5, 1.123, 2.0];
+                vec.sort_by(|a, b| a.partial_cmp(b).unwrap());
+                println!("\u{26EC} float sort: {:?}", vec);
+
+                // struct vector
+                let mut people = vec![
+                    Person::new("Zoe".to_string(), 25),
+                    Person::new("Al".to_string(), 58),
+                    Person::new("John".to_string(), 12),
+                ];
+
+                people.sort();
+                println!("\u{26EC} People: {:?}", people);
+
+                people.sort_by(|a, b| b.age.cmp(&a.age));
+                println!("\u{26EC} People: {:?}", people);
+            } /* [ 22. Vector Sort ] */
+
+            23 => {
+                println!(
+                    "This is {} in color, {} in color and {} in color",
+                    Colour::Red.paint("red"),
+                    Colour::Blue.paint("blue"),
+                    Colour::Green.paint("green")
+                );
+
+                println!(
+                    "\u{26EC} {}, {} and {}",
+                    Colour::Yellow.paint("This is colored"),
+                    Style::new().bold().paint("this is bold"),
+                    Colour::Yellow.bold().paint("this is bold and colored"),
+                );
+            } /* [ 23. Colour, Style ] */
             _ => {
                 continue;
             }
@@ -339,6 +495,19 @@ fn main() {
         let elapse_time = now.elapsed();
         let elapse = elapse_time.as_secs();
         pause_screen(choice, elapse);
+        arg_num = -1;
+    } // [ loop ]
+}
+
+#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
+struct Person {
+    name: String,
+    age: u32,
+}
+
+impl Person {
+    pub fn new(name: String, age: u32) -> Self {
+        Person { name, age }
     }
 }
 
@@ -354,5 +523,5 @@ fn pause_screen(choice: i32, elapse: u64) {
 
 fn clear_screen() {
     // println!("\x1b[2J\x1b[1;1H"); // clear screen & set cursor 1,1
-    // clearscreen::clear().unwrap();
+    clearscreen::clear().unwrap();
 }
