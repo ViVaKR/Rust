@@ -10,7 +10,7 @@ use std::io::{self, Write};
 pub fn display_menu() {
     let mut menus: HashMap<u32, String> = HashMap::new();
 
-    menus.insert(0, String::from("Quit\t"));
+    menus.insert(0, String::from("Quit"));
     menus.insert(1, String::from("Random"));
     menus.insert(2, String::from("Array"));
     menus.insert(3, String::from("Format"));
@@ -34,6 +34,9 @@ pub fn display_menu() {
     menus.insert(21, String::from("Bits"));
     menus.insert(22, String::from("Sort"));
     menus.insert(23, String::from("Colour"));
+    menus.insert(24, String::from("Encrpt"));
+    menus.insert(25, String::from("Result"));
+    menus.insert(26, String::from("Strings"));
 
     let now: DateTime<Local> = Local::now();
 

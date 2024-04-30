@@ -54,3 +54,37 @@ impl Guess {
         self.value
     }
 }
+
+// Result : ?
+pub fn read_from_file() -> Result<String, io::Error> {
+    let mut r = String::new();
+
+    // ? -> match Err
+    _ = File::open("file.txt")?.read_to_string(&mut r)?;
+    Ok(r)
+}
+
+// Result unwrap
+pub fn read_from_file2() -> Result<(String, usize), ()> {
+    let mut r = String::new();
+
+    let content = File::open("file.txt")
+        .unwrap()
+        .read_to_string(&mut r)
+        .unwrap();
+
+    println!("\u{26EC} Content -> {}", r);
+
+    Ok((r, content))
+}
+
+// Result expect
+pub fn read_from_file3() -> Result<(String, usize), ()> {
+    let mut r = String::new();
+    let length = File::open("hello.txt")
+        .expect("File not found")
+        .read_to_string(&mut r)
+        .expect("File Read Failed");
+
+    Ok((r, length))
+}

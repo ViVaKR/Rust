@@ -1,5 +1,6 @@
 pub mod algorithm;
 pub mod closures;
+pub mod data_encrpt;
 pub mod datatype;
 pub mod function;
 pub mod generic;
@@ -9,4 +10,6 @@ pub mod loop_a;
 pub mod ownership;
 pub mod panic_result;
 pub mod some;
+pub mod strings;
 pub mod structs;
+pub mod vectors;

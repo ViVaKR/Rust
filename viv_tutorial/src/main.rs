@@ -2,6 +2,7 @@ use ansi_term::{Colour, Style};
 use common::{
     algorithm::{fibnacci, is_prime},
     closures::{capture_types, sort_list, Inventory, ShirtColor},
+    data_encrpt::{cipher_run, encrpt_run, signature_hmac_run},
     datatype::{data_type, operation, vector},
     function::{function, largest_char, largest_i32},
     generic::{generic_run, longest},
@@ -9,9 +10,13 @@ use common::{
     iterator::{iter_filter, iter_map, iter_repeat},
     loop_a::{for_a, for_b, loop_a, loop_b, while_a},
     ownership::{first_wrod, first_wrod_ref, ownership_a},
-    panic_result::{panic_run, result_run, Guess},
+    panic_result::{
+        panic_run, read_from_file, read_from_file2, read_from_file3, result_run, Guess,
+    },
     some::{check_optional, divide},
+    strings::make_string,
     structs::struct_run,
+    vectors::create_vectors,
 };
 use rand::{
     distributions::{Distribution, Uniform},
@@ -488,6 +493,46 @@ fn main() -> Result<(), NormalError> {
                     Colour::Yellow.bold().paint("this is bold and colored"),
                 );
             } /* [ 23. Colour, Style ] */
+
+            24 => {
+                let rs = encrpt_run();
+                println!("\u{26EC} {:?}", rs);
+
+                let rs = signature_hmac_run();
+                println!("\u{26EC} result: {:?}", rs);
+
+                _ = cipher_run();
+            } /* [ 24. Hashing, Cipher ] */
+
+            25 => {
+                let content = read_from_file();
+                match content {
+                    Ok(txt) => println!("\u{26EC} text: {}", txt),
+                    Err(err) => println!("\u{26EC} Error: {}", err),
+                }
+
+                // unwrap
+                let rs = read_from_file2();
+                match rs {
+                    Ok((text, count)) => println!("\u{26EC} {}, ({}) ", text, count),
+                    Err(_) => todo!(),
+                }
+
+                // expect
+                let rs = read_from_file3();
+                match rs {
+                    Ok((text, count)) => println!("\u{26EC} {}, ({})", text, count),
+                    Err(_) => todo!(),
+                }
+            } /* [ 25. Result ] */
+
+            26 => {
+                make_string();
+            } /* [ 26. String ] */
+
+            27 => {
+                create_vectors();
+            }
             _ => {
                 continue;
             }
