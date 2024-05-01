@@ -1,5 +1,6 @@
 use ansi_term::{Colour, Style};
 use common::{
+    add, add_as, addm, adds,
     algorithm::{fibnacci, is_prime},
     closures::{capture_types, sort_list, Inventory, ShirtColor},
     data_encrpt::{cipher_run, encrpt_run, signature_hmac_run},
@@ -14,10 +15,13 @@ use common::{
         panic_run, read_from_file, read_from_file2, read_from_file3, result_run, Guess,
     },
     some::{check_optional, divide},
+    std_deviation::{mean, std_deviation},
     strings::make_string,
     structs::struct_run,
     vectors::create_vectors,
+    viv_listener::viv_listener,
 };
+
 use rand::{
     distributions::{Distribution, Uniform},
     thread_rng, Rng,
@@ -533,6 +537,51 @@ fn main() -> Result<(), NormalError> {
             27 => {
                 create_vectors();
             }
+
+            28 => {
+                let data = [3, 1, 6, 1, 5, 8, 1, 8, 10, 11];
+                let data_mean = mean(&data);
+                let data_std_deviation = std_deviation(&data);
+                println!("\u{26EC} Standard deviation is {:?}", data_std_deviation);
+
+                let zscore = match (data_mean, data_std_deviation) {
+                    (Some(mean), Some(std_deviation)) => {
+                        let diff = data[4] as f32 - mean;
+
+                        Some(diff / std_deviation)
+                    }
+                    _ => None,
+                };
+
+                println!(
+                    "\u{26EC} Z-score of data at index 4 (with value {}) is {:?} ",
+                    data[4], zscore
+                );
+            } /* [ 28. 표준편차 ] */
+
+            29 => {
+                _ = viv_listener();
+            } /* [29. Socket Listener ] */
+
+            30 => {
+                let sum = add!(1, 2);
+                println!("\u{26EC} sum(1, 1) -> {}", sum);
+
+                // add_as
+                println!("\u{26EC} add_as: {}", add_as!(0, 2, u8));
+
+                // adds
+                let sum = adds!(1, 2, 3, 4);
+                println!("\u{26EC} sum: {}", sum);
+
+                // addm
+                println!(
+                    "\u{26EC} addm: {}, addm: {},  addm: {}",
+                    addm!(33),
+                    addm!(10, 45),
+                    addm!(4, 5, 6, 7, 8, 9)
+                );
+            } /* [ 30. macro ] */
             _ => {
                 continue;
             }

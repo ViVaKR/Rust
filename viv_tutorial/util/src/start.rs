@@ -37,6 +37,9 @@ pub fn display_menu() {
     menus.insert(24, String::from("Encrpt"));
     menus.insert(25, String::from("Result"));
     menus.insert(26, String::from("Strings"));
+    menus.insert(27, String::from("Vector"));
+    menus.insert(28, String::from("표준편차"));
+    menus.insert(29, String::from("Socket Listener"));
 
     let now: DateTime<Local> = Local::now();
 
