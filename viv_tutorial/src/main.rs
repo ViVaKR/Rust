@@ -10,6 +10,7 @@ use common::{
     interface::runner,
     iterator::{iter_filter, iter_map, iter_repeat},
     loop_a::{for_a, for_b, loop_a, loop_b, while_a},
+    make_public, ok_or_return,
     ownership::{first_wrod, first_wrod_ref, ownership_a},
     panic_result::{
         panic_run, read_from_file, read_from_file2, read_from_file3, result_run, Guess,
@@ -581,7 +582,69 @@ fn main() -> Result<(), NormalError> {
                     addm!(10, 45),
                     addm!(4, 5, 6, 7, 8, 9)
                 );
+
+                //
+                println!("\u{26EC} ok_or_return: {:?}", macro_run());
+
+                // struct
+                make_public! {
+                    #[derive(Debug)]
+                    struct Name {
+                        n:i64,
+                        t:i64,
+                        g:i64,
+                    }
+                }
+
+                // --> Procedural macros in Rust
+                // 1. Attribute-like macros
+                // 2. Derive macros
+                // 3. Function-like macros
+
+                // $ cargo new macro-demo --lib
             } /* [ 30. macro ] */
+
+            31 => {} /* [ 31. Directory Traversal] */
+
+            32 => {
+                let mut number = 0;
+                loop {
+                    number += 1;
+                    if number > 5 {
+                        break;
+                    }
+                    println!("\u{26EC} {}", number);
+                }
+
+                // let mut array = vec![i32::MIN; 10];
+                // for (i, v) in array.iter().enumerate() {
+                //     loop {
+                //         io::stdin()
+                //             .read_line(&mut input)
+                //             .expect("Failed to read line");
+
+                //         if let Ok(val) = input.trim().parse::<i32>() {
+                //             array[i] = val;
+                //             break;
+                //         } else {
+                //             continue;
+                //         }
+                //     }
+                // }
+
+                // let idx = 0;
+                // let max = 0;
+
+                // for item in array {
+                //     item =
+                // }
+
+                // loop {
+                //     if let Ok(val) = input.trim().parse::<i32>() {
+                //         if max < array[idx] {}
+                //     }
+                // }
+            }
             _ => {
                 continue;
             }
@@ -591,6 +654,21 @@ fn main() -> Result<(), NormalError> {
         pause_screen(choice, elapse);
         arg_num = -1;
     } // [ loop ]
+}
+
+fn some_work(i: i64, j: i64) -> Result<(i64, i64), String> {
+    if i + j > 2 {
+        Ok((i, j))
+    } else {
+        Err("error".to_owned())
+    }
+}
+
+fn macro_run() -> Result<(), String> {
+    // ok_or_return
+    ok_or_return!(some_work(1, 4));
+    ok_or_return!(some_work(1, 0));
+    Ok(())
 }
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
