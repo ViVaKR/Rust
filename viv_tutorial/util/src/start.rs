@@ -40,6 +40,9 @@ pub fn display_menu() {
     menus.insert(27, String::from("Vector"));
     menus.insert(28, String::from("표준편차"));
     menus.insert(29, String::from("Socket Listener"));
+    menus.insert(30, String::from("Macro"));
+    menus.insert(31, String::from("Directory"));
+    menus.insert(32, String::from("Etc"));
 
     let now: DateTime<Local> = Local::now();
 

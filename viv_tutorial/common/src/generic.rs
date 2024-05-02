@@ -1,3 +1,17 @@
+pub fn generic_run() {
+    let p = Point { x: 5, y: 10 };
+    println!("\u{26EC} p.x = {}", p.x());
+
+    let string1 = String::from("abcd");
+    let string2 = "xyz";
+    let result = longest(string1.as_str(), string2);
+    println!("\u{26EC} The longest string is {}", result);
+}
+
+pub struct GData<T> {
+    pub value: T,
+}
+
 pub struct Point<T> {
     pub x: T,
     pub y: T,
@@ -7,15 +21,6 @@ impl<T> Point<T> {
     fn x(&self) -> &T {
         &self.x
     }
-}
-pub fn generic_run() {
-    let p = Point { x: 5, y: 10 };
-    println!("\u{26EC} p.x = {}", p.x());
-
-    let string1 = String::from("abcd");
-    let string2 = "xyz";
-    let result = longest(string1.as_str(), string2);
-    println!("\u{26EC} The longest string is {}", result);
 }
 
 // --> Life Time

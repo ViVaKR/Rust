@@ -1,4 +1,4 @@
-use std::io;
+use std::io::{self};
 
 pub fn data_type() {
     // Scalar Type
@@ -120,7 +120,6 @@ pub fn vector() {
     v.push(33);
 
     let third = &v[2];
-
     println!("\u{26EC} vec = {:?} third = {}", v, third);
     let last = v.get(v.len() - 1);
 
@@ -131,4 +130,51 @@ pub fn vector() {
 
     let v2 = vec![1, 2, 3];
     println!("\u{26EC} v2 = {:?}", v2);
+
+    println!("\u{26EC} (0..10).collect ");
+    let collected_iterator: Vec<i32> = (0..10).collect();
+    println!("\u{26EC} {:?}", collected_iterator);
+
+    println!("\n\u{269E} vec! macro can be used to initialize a vector \u{269F}");
+    let mut xs = vec![1i32, 2, 3];
+    xs.push(4);
+    xs.push(5);
+    xs.push(12);
+    xs.push(14);
+    let element = match xs.pop() {
+        Some(val) => val,
+        None => -1,
+    };
+
+    println!(
+        "\u{26EC} vec! {:?}, len ({}), {}, pop {}",
+        xs,
+        xs.len(),
+        xs[2],
+        element,
+    );
+
+    // yeild return with index
+    for (i, item) in xs.iter().enumerate() {
+        println!("\u{26EC} {} - {}", i, item);
+    }
+
+    // modifying each value
+    for item in xs.iter_mut() {
+        *item *= 3;
+    }
+    println!("\u{26EC} Update vector: {:?}", xs);
+
+    // step by
+    println!("\n\u{269E} Step by \u{269F}");
+    for item in (1..=10).step_by(2) {
+        println!("\u{26EC} {}", item);
+    }
+
+    println!("\n\u{269E} - \u{269F}");
+    let mut i = 0;
+    while i <= 10 {
+        println!("\u{26EC} {}", i);
+        i += 2;
+    }
 }

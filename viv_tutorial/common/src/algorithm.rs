@@ -15,12 +15,6 @@ pub fn is_prime(n: i32, i: i32) -> bool {
     return is_prime(n, i + 1);
 }
 
-// struct User {
-//     name: String,
-//     email: String,
-//     active: bool,
-// }
-
 pub fn fibnacci(number: usize) -> usize {
     fn fib_memo(n: usize, memo: &mut [Option<usize>]) -> usize {
         memo[n].unwrap_or_else(|| {

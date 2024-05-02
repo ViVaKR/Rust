@@ -6,7 +6,7 @@ use common::{
     data_encrpt::{cipher_run, encrpt_run, signature_hmac_run},
     datatype::{data_type, operation, vector},
     function::{function, largest_char, largest_i32},
-    generic::{generic_run, longest},
+    generic::{generic_run, longest, GData},
     interface::runner,
     iterator::{iter_filter, iter_map, iter_repeat},
     loop_a::{for_a, for_b, loop_a, loop_b, while_a},
@@ -38,7 +38,7 @@ use std::{
     process,
     time::Instant,
 };
-use util::start;
+use util::{baekjoon::baekjoon_run, start};
 
 extern crate communicator;
 extern crate snippet;
@@ -72,6 +72,7 @@ fn main() -> Result<(), NormalError> {
     loop {
         start::display_menu();
         let choice: i32 = if arg_num > 0 {
+            println!("\n\u{269E} \u{262C} \u{269F}");
             arg_num
         } else {
             start::choice_menu()
@@ -204,7 +205,7 @@ fn main() -> Result<(), NormalError> {
                 while_a();
                 for_a();
                 for_b();
-            }
+            } /* [ 8. loop ] */
 
             9 => {
                 println!("\n\u{269E} OwerShip \u{269F}");
@@ -370,6 +371,8 @@ fn main() -> Result<(), NormalError> {
 
             18 => {
                 struct_run();
+                let t: GData<i32> = GData { value: 125 };
+                println!("\u{26EC} {}", t.value);
             } // [ struct, impl ]
 
             19 => {
@@ -613,7 +616,7 @@ fn main() -> Result<(), NormalError> {
                     if number > 5 {
                         break;
                     }
-                    println!("\u{26EC} {}", number);
+                    println!("\u{2708} {}", number);
                 }
 
                 // let mut array = vec![i32::MIN; 10];
@@ -645,6 +648,12 @@ fn main() -> Result<(), NormalError> {
                 //     }
                 // }
             }
+
+            33 => {
+                //
+
+                baekjoon_run();
+            } /* [ 33. baekjoon ] */
             _ => {
                 continue;
             }

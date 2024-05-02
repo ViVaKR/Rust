@@ -10,7 +10,7 @@
     cargo build
     cargo check
     cargo run -q
-    restup update
+    rustup update
     rustc --version
     rustup doc
 ```
