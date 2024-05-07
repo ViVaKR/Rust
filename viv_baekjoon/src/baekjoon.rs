@@ -1,8 +1,308 @@
 use std::io::Write;
 
-pub fn bj_7510() {
-    //
+/// A + B - 5
+pub fn bj_10952() {
+    loop {
+        let mut nums = String::new();
+        std::io::stdout().flush().unwrap();
+
+        let lines = std::io::stdin()
+            .read_line(&mut nums)
+            .expect("Failed to read");
+
+        if lines != 4 {
+            break;
+        }
+        let v: Vec<i32> = nums
+            .trim()
+            .split(' ')
+            .into_iter()
+            .map(|x| x.parse::<i32>().unwrap())
+            .collect();
+
+        let a = &v[0];
+        let b = &v[1];
+
+        if a == &0 && b == &0 {
+            break;
+        };
+
+        let sum = a + b;
+
+        println!("{}", sum);
+    }
 }
+
+/// A + B - 4
+pub fn bj_10951() {
+    loop {
+        let mut nums = String::new();
+        std::io::stdout().flush().unwrap();
+
+        let lines = std::io::stdin()
+            .read_line(&mut nums)
+            .expect("Failed to read");
+
+        if lines != 4 {
+            break;
+        };
+
+        let v: Vec<i32> = nums
+            .trim()
+            .split(' ')
+            .into_iter()
+            .map(|x| x.parse::<i32>().unwrap())
+            .collect();
+
+        let a = &v[0];
+        let b = &v[1];
+        let sum = a + b;
+        println!("{}", sum);
+    }
+}
+
+/// A + B - c
+pub fn bj_10950() {
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read");
+
+    let len = input.trim().parse::<usize>().unwrap();
+
+    for _ in 0..len {
+        let mut nums = String::new();
+        std::io::stdout().flush().unwrap();
+        std::io::stdin()
+            .read_line(&mut nums)
+            .expect("Failed to read");
+
+        let v: Vec<usize> = nums
+            .trim()
+            .split_whitespace()
+            .map(|x| x.parse::<usize>().unwrap())
+            .collect();
+
+        let a = &v[0];
+        let b = &v[1];
+        let sum = a + b;
+        println!("{}", sum);
+    }
+}
+
+/// X보다 작은 수
+pub fn bj_10871() {
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read");
+
+    let len_filter: Vec<usize> = input
+        .trim()
+        .split_whitespace()
+        .map(|x| x.parse::<usize>().unwrap())
+        .collect();
+
+    let mut input_arr = String::new();
+    std::io::stdout().flush().unwrap();
+
+    std::io::stdin()
+        .read_line(&mut input_arr)
+        .expect("Failed to read");
+
+    let arr: Vec<usize> = input_arr
+        .trim()
+        .split_whitespace()
+        .map(|x| x.parse::<usize>().unwrap())
+        .collect();
+
+    for item in arr.into_iter().take(len_filter[0]) {
+        if item < len_filter[1] {
+            print!("{} ", item);
+        }
+    }
+    println!();
+}
+
+/// 중복 갯수
+pub fn bj_10807() {
+    let mut input_count = String::new();
+    std::io::stdout().flush().unwrap();
+
+    std::io::stdin()
+        .read_line(&mut input_count)
+        .expect("Failed to read");
+
+    let len = input_count.trim().parse::<usize>().unwrap();
+
+    let mut input_array = String::new();
+    std::io::stdout().flush().unwrap();
+
+    std::io::stdin()
+        .read_line(&mut input_array)
+        .expect("read error");
+
+    let array: Vec<i32> = input_array
+        .trim()
+        .split(' ')
+        .into_iter()
+        .map(|x| x.parse::<i32>().unwrap())
+        .collect();
+
+    let mut input_filter = String::new();
+    std::io::stdout().flush().unwrap();
+
+    std::io::stdin()
+        .read_line(&mut input_filter)
+        .expect("Failed to read");
+
+    let filter: i32 = input_filter.trim().parse().unwrap();
+
+    let mut count = 0;
+    for i in array.into_iter().take(len) {
+        if i.eq(&filter) {
+            count += 1;
+        }
+    }
+    println!("{}", count);
+}
+/// 최소, 최대값
+pub fn bj_10818() {
+    let mut input_cn = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input_cn)
+        .expect("Failed to read");
+
+    let size = input_cn.trim().parse::<u32>().unwrap();
+
+    let mut arr: Vec<i32> = Vec::new();
+    let mut input_nums = String::new();
+    std::io::stdout().flush().unwrap();
+
+    std::io::stdin()
+        .read_line(&mut input_nums)
+        .expect("Failed to read");
+    let numbers: Vec<&str> = input_nums.trim().split(' ').collect();
+    let mut idx = 0;
+    for _ in 0..size {
+        let item = (&numbers.get(idx)).unwrap();
+        let number = item.parse::<i32>().unwrap();
+        arr.push(number);
+        idx += 1;
+    }
+    arr.sort();
+
+    let min = arr.iter().min().unwrap();
+    let max = arr.iter().max().unwrap();
+
+    println!("{} {}", min, max);
+}
+
+/// 시험성적
+pub fn bj_9498() {
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read");
+    let rs = match input.trim().parse::<u8>().unwrap() {
+        90..=100 => 'A',
+        80..=89 => 'B',
+        70..=79 => 'C',
+        60..=69 => 'D',
+        _ => 'F',
+    };
+    println!("{}", rs);
+}
+
+/// 오븐시계
+pub fn bj_2525() {
+    let mut input_a = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input_a)
+        .expect("Failed to read");
+    let hour_minute: Vec<u32> = input_a
+        .trim()
+        .split(' ')
+        .into_iter()
+        .map(|x| x.parse::<u32>().unwrap())
+        .collect();
+
+    let mut input_b = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input_b)
+        .expect("Failed to read");
+
+    let minute: u32 = input_b.trim().parse().unwrap();
+
+    let hour = (&hour_minute[0] + ((&hour_minute[1] + minute) / 60)) % 24;
+    let min = (&hour_minute[1] + minute) % 60;
+    println!("{} {}", hour, min);
+}
+
+/// 피타고라스 정리
+pub fn bj_7510() {
+    let mut input = String::new();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read");
+
+    let times = input.trim().parse::<u32>().unwrap();
+    for i in 1..=times {
+        let mut temp = String::new();
+        std::io::stdin()
+            .read_line(&mut temp)
+            .expect("Failed to read");
+
+        let mut arr: Vec<u32> = temp
+            .trim()
+            .split(' ')
+            .into_iter()
+            .map(|x| x.parse::<u32>().unwrap())
+            .collect();
+
+        arr.sort();
+
+        let sum_ab = u32::pow(arr[0], 2) + u32::pow(arr[1], 2);
+        let sum_c = u32::pow(arr[2], 2);
+
+        let result = if sum_ab.eq(&sum_c) { "yes" } else { "no" };
+
+        println!("Scenario #{}:\n{}", i, result);
+        println!("");
+    }
+}
+
+// fn temp_a() {
+// let mut arr: Vec<u32> = Vec::new();
+
+// arr.push(85);
+// arr.push(36);
+// arr.push(77);
+// arr.sort();
+
+// println!(
+//     "\u{26EC} {} == {}",
+//     u32::pow(36, 2) + u32::pow(77, 2),
+//     u32::pow(85, 2)
+// );
+
+// temp_a();
+//     let mut v = vec![4, 3, 7, 1, 9];
+//     for i in &mut v {
+//         *i += 10; // * : 역참조 연산자.
+//         println!("\u{26EC} {}", i);
+//     }
+//     println!("\u{26EC} = {}", &v[2]);
+//     let x = 5;
+//     let y = Box::new(x);
+//     println!("\u{26EC} {:p}, {:p}, {}, {}", y, &x, *&x, *y);
+// }
 
 /// Draw
 pub fn bj_10172() {
