@@ -654,6 +654,10 @@ fn main() -> Result<(), NormalError> {
 
                 baekjoon_run();
             } /* [ 33. baekjoon ] */
+
+            34 => {
+                println!("Hello, World");
+            }
             _ => {
                 continue;
             }

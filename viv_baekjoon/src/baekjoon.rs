@@ -1,6 +1,177 @@
 use std::io::Write;
 
-pub fn demo() {
+pub fn bj_7510() {
+    //
+}
+
+/// Draw
+pub fn bj_10172() {
+    let l1 = "|\\_/|";
+    let l2 = "|q p|   /}";
+    let l3 = "( 0 )\"\"\"\\";
+    let l4 = "|\"^\"`    |";
+    let l5 = "||_/=\\\\__|";
+
+    println!("{}", l1);
+    println!("{}", l2);
+    println!("{}", l3);
+    println!("{}", l4);
+    println!("{}", l5);
+
+    //     let dog = r#"
+    // |\_/|
+    // |q p|   /}
+    // ( 0 )"""\
+    // |"^"`    |
+    // ||_/=\\__|
+    // "#;
+}
+
+pub fn bj_10171() {
+    let line1 = "\\    /\\";
+    let line2 = " )  ( ')";
+    let line3 = "(  /  )";
+    let line4 = " \\(__)|";
+    println!("{}", line1);
+    println!("{}", line2);
+    println!("{}", line3);
+    println!("{}", line4);
+}
+/// 곱셈
+pub fn bj_2588() {
+    let mut input_first = String::new();
+    let mut input_second = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input_first)
+        .expect("Failed to read");
+
+    std::io::stdin()
+        .read_line(&mut input_second)
+        .expect("Failed to read");
+
+    let first: i32 = input_first.trim().parse::<i32>().unwrap();
+    let second_org: i32 = input_second.trim().parse::<i32>().unwrap();
+    let mut second = second_org.clone();
+    println!("{}", first * (second % 10));
+    second = second / 10;
+    println!("{}", first * (second % 10));
+    second = second / 10;
+    println!("{}", first * (second % 10));
+    println!("{}", first * second_org);
+}
+/// 나머지
+pub fn bj_10430() {
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read");
+
+    let array: Vec<i32> = input
+        .trim()
+        .split(' ')
+        .into_iter()
+        .map(|x| x.parse::<i32>().unwrap())
+        .collect();
+
+    let a = array[0];
+    let b = array[1];
+    let c = array[2];
+    let rs1 = (a + b) % c;
+    let rs2 = ((a % c) + (b % c)) % c;
+    let rs3 = (a * b) % c;
+    let rs4 = ((a % c) * (b % c)) % c;
+    println!("{}", rs1);
+    println!("{}", rs2);
+    println!("{}", rs3);
+    println!("{}", rs4);
+}
+
+/// 메모장 만들기
+pub fn bj_1406() {
+    let mut input_str = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input_str)
+        .expect("Failed to read");
+
+    // commands
+    let mut input_len = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input_len)
+        .expect("Failed to read");
+
+    let mut length: i32 = input_len.trim().parse().expect("Not a number");
+    let mut left: Vec<char> = Vec::new();
+    let mut right: Vec<char> = Vec::new();
+
+    for c in input_str.trim().chars().into_iter() {
+        left.push(c);
+    }
+
+    loop {
+        if length == 0 {
+            break;
+        }
+
+        let mut temp = String::new();
+
+        std::io::stdin()
+            .read_line(&mut temp)
+            .expect("Failed to read");
+
+        let first_letter: char = match temp.chars().next() {
+            Some(letter) => letter,
+            None => continue,
+        };
+
+        let mut last_letter = first_letter.clone();
+        if first_letter.eq(&'P') {
+            let t: Vec<_> = temp.trim().split(' ').collect();
+            last_letter = t[t.len() - 1].chars().last().unwrap();
+        }
+
+        match first_letter {
+            'L' => {
+                if left.last().is_some() {
+                    let v = left.pop().unwrap();
+                    right.push(v);
+                }
+            }
+            'D' => {
+                if right.last().is_some() {
+                    let v = right.pop().unwrap();
+                    left.push(v);
+                }
+            }
+            'B' => {
+                if left.last().is_some() {
+                    left.pop().unwrap();
+                }
+            }
+            'P' => {
+                left.push(last_letter);
+            }
+            _ => continue,
+        }
+        length -= 1;
+    }
+
+    for _ in 0..right.len() {
+        let r = right.pop().unwrap();
+        left.push(r);
+    }
+
+    for item in left.into_iter() {
+        print!("{}", item);
+    }
+    println!("");
+}
+
+/// 진법 변환 (2745)
+pub fn bj_2745() {
     let mut str = String::new();
     std::io::stdin()
         .read_line(&mut str)
@@ -9,16 +180,6 @@ pub fn demo() {
     let array: Vec<_> = str.trim().split(' ').collect();
     let number: String = array[0].trim().parse().expect("Wanted string");
     let base: i32 = array[1].trim().parse().expect("Wanted a number");
-
-    // let mut number = String::new();
-    // std::io::stdin()
-    //     .read_line(&mut number)
-    //     .expect("Failed to read");
-
-    // let base: i32 = match number.trim().parse::<i32>() {
-    //     Ok(val) => val,
-    //     Err(_) => 36,
-    // };
 
     let mut sum: i32 = 0;
     for (i, c) in number.trim().chars().rev().enumerate() {
@@ -57,6 +218,7 @@ pub fn bj_11382() {
     std::io::stdin()
         .read_line(&mut input)
         .expect("Failed to read");
+
     let array: Vec<_> = input.trim().split(' ').into_iter().collect();
 
     let a: i64 = array[0].trim().parse().expect("Wanted a number");
