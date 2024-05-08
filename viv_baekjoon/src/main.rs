@@ -5,6 +5,7 @@ use baekjoon::{
     bj_10950, bj_10951, bj_10952, bj_10998, bj_11382, bj_1330, bj_1406, bj_18108, bj_2525, bj_2562,
     bj_2588, bj_2739, bj_2743, bj_2745, bj_2753, bj_7510, bj_9498,
 };
+use generic_ex::make_point;
 
 mod baekjoon;
 pub mod generic_ex;
@@ -21,6 +22,7 @@ fn main() {
     }
 
     match choice {
+        1 => make_point(),
         1008 => bj_1008(),
         1406 => bj_1406(), // 메모장
         1330 => bj_1330(),
