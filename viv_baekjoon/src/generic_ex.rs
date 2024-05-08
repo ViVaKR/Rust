@@ -5,13 +5,6 @@ pub struct Size<T, U> {
     pub y: U,
 }
 
-pub fn make_point() {
-    let integer = Point { x: 5, y: 10 };
-    let float = Point { x: 1.3, y: 3.14 };
-
-    let size_a = Size { x: 5, y: 3.14 };
-}
-
 pub fn generic_run() {
     let data: Data<i32> = Data { value: 123 };
     let data_str: Data<String> = Data {
