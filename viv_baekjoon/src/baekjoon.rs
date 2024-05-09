@@ -1,86 +1,120 @@
 use std::io::Write;
 
-fn make_string(a: u32, b: &str) -> String {
-    format!("{b} {a}")
+pub fn bj_7287() {
+    println!("{}", 35);
+    println!("{}", "kimbumjun");
+}
+
+/// 가짜 평균
+pub fn bj_1546() {
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("fail to read");
+
+    let len = input.trim().parse::<usize>().unwrap();
+
+    let mut numbers = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut numbers)
+        .expect("fail to read");
+
+    let mut array: Vec<usize> = numbers
+        .trim()
+        .split(' ')
+        .take(len)
+        .map(|x| x.parse::<usize>().unwrap())
+        .collect();
+
+    array.sort();
+    let max = array[len - 1];
+
+    let fmax = max as f64;
+
+    let mut new_sum = 0.0;
+
+    for i in 0..len {
+        let val = array[i];
+        let fv = val as f64;
+        new_sum += fv / fmax;
+    }
+
+    let new_avg = new_sum / len as f64;
+    let new_score = new_avg * 100.0f64;
+
+    let prec = 6;
+
+    println!("{:8.1$}", new_score, prec);
+}
+
+/// 숫자의 합
+pub fn bj_11720() {
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("fail to read");
+
+    let len = input.trim().parse::<usize>().unwrap();
+
+    let mut numbers = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut numbers)
+        .expect("fail to read");
+
+    let mut sum = 0;
+    for letter in numbers.chars().take(len).into_iter() {
+        let number = letter.to_digit(10).unwrap();
+        sum += number;
+    }
+
+    println!("{}", sum);
+}
+
+/// 단어의 개수
+pub fn bj_1152() {
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("fail to read");
+    let words = input.trim().split_whitespace().into_iter().count();
+    println!("{}", words);
 }
 
 /// 별 찍기 - 7
 pub fn bj_2444() {
-    // fmt
-    let temp = (3, 4);
-    let fm = format!("{:?}, {}, {}", (3, 4), temp.0, temp.1);
-    println!("\u{26EC} {}", fm);
-    println!(
-        "\u{26EC} {value} {zero}, {two}",
-        value = 123,
-        zero = 1,
-        two = 2
-    );
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("fail to read");
+    let count = input.trim().parse::<usize>().unwrap();
+    let star = '*';
+    for i in 0..count {
+        print!("{:>c$}", star, c = count - i);
+        for _ in 0..i {
+            print!("{}", star);
+        }
+        for _ in 0..i {
+            print!("{}", star);
+        }
+        println!();
+    }
 
-    let people = "Rustanceans";
-    println!("\u{26EC} {people}");
-
-    println!("\u{26EC} {:010}", 42);
-
-    println!("\u{26EC} {:#?}", (100, 200.to_string()));
-    println!("\u{26EC} {1} {} {0} {}", 1, 2);
-
-    // identifier '=' expression
-    println!("\u{26EC} {name} {}", 1, name = 2);
-
-    let s = make_string(927, "label");
-    println!("\u{26EC} {}", s);
-
-    // width
-    println!("Hello {:5}!", "x");
-    println!("Hello {:1$}!", "x", 10);
-    println!("Hello {1:0$}!", 15, "x");
-    let width = 25;
-    println!("Hello {:width$}!", "x");
-
-    // fill / alignment
-    println!("Hello {:<17}!", "x"); // Hello x                !
-    println!("Hello {:>width$}!", "x"); // Hello                         x!
-    println!("Hello {:^width$}", "x"); // Hello             x
-    println!("Hello {:-^width$}", "Y"); // Hello ------------Y------------
-    println!("Hello {:-^width$.8}", 0.9); // Hello -------0.90000000--------
-
-    // Sign
-    println!("Hello {:+}, {:+}!", 5, -5);
-
-    println!("Hello {:#x}, {:#b}, {:#o}!", 27, 27, 27); // Hello 0x1b, 0b11011, 0o33!
-    println!("Hello {:#016x}!", 27);
-    println!("27 {:#032b}", 27);
-    println!("{:#032x}", 27);
-    // 0x00000000000000000000000000001b
-    // #?, #x, #X, #b, #0
-    // ? => Debug
-    // x? => Debug with lower-case hexadecimal intergers
-    // X? => Debug with upper-case hexadecimal integers
-    // o => Octal
-    // x => LowerHex
-    // X => UpperHex
-    // p => Pointer
-    // b => Binary
-    // e => LowerExp
-    // E => UpperExp
-
-    // precision
-    // 1. An integer .N:
-    // 2. An integer or name followed by dollar sign .N$:
-    // 3. An asterisk .*:
-
-    println!("Hello {0} is {1:.16}", "x", 0.01);
-    println!("Hello {1} is {2:.0$}", 16, "x", 3.141592);
-    println!("Hello {} is {:.*}", "x", 5, 0.034);
-    println!("Hello {1} is {2:.*}", 5, "x", 0.123);
-    println!("Hello {} is {number:.prec$}", "x", prec = 16, number = 3.14);
-    println!(
-        "{}, `{name:>8.*}` has 3 right-aligned chararcters",
-        "Hello",
-        3,
-        name = "1234.56"
-    );
+    for i in (1..count).rev() {
+        print!("{:>c$}", '\u{0020}', c = count - i);
+        for _ in 0..i {
+            print!("{}", star);
+        }
+        for _ in 1..i {
+            print!("{}", star);
+        }
+        println!();
+    }
 }
 
 /// 별찍기 - 1
@@ -132,6 +166,7 @@ pub fn bj_10952() {
         if lines != 4 {
             break;
         }
+
         let v: Vec<i32> = nums
             .trim()
             .split(' ')
@@ -792,4 +827,103 @@ pub fn bj_2562() {
         }
     }
     println!("{}\n{}", max, max_order);
+}
+
+/// fmt
+pub fn bj_fmt() {
+    // fmt
+    let temp = (3, 4);
+    let fm = format!("{:?}, {}, {}", (3, 4), temp.0, temp.1);
+    println!("\u{26EC} {}", fm);
+    println!(
+        "\u{26EC} {value} {zero}, {two}",
+        value = 123,
+        zero = 1,
+        two = 2
+    );
+
+    let people = "Rustanceans";
+    println!("\u{26EC} {people}");
+
+    println!("\u{26EC} {:010}", 42);
+
+    println!("\u{26EC} {:#?}", (100, 200.to_string()));
+    println!("\u{26EC} {1} {} {0} {}", 1, 2);
+
+    // identifier '=' expression
+    println!("\u{26EC} {name} {}", 1, name = 2);
+
+    let s = make_string(927, "label");
+    println!("\u{26EC} {}", s);
+
+    // width
+    println!("Hello {:5}!", "x");
+    println!("Hello {:1$}!", "x", 10);
+    println!("Hello {1:0$}!", 15, "x");
+    let width = 25;
+    println!("Hello {:width$}!", "x");
+
+    // fill / alignment
+    println!("Hello {:<17}!", "x"); // Hello x                !
+    println!("Hello {:>width$}!", "x"); // Hello                         x!
+    println!("Hello {:^width$}", "x"); // Hello             x
+    println!("Hello {:-^width$}", "Y"); // Hello ------------Y------------
+    println!("Hello {:-^width$.8}", 0.9); // Hello -------0.90000000--------
+
+    // Sign
+    println!("Hello {:+}, {:+}!", 5, -5);
+    println!("Hello {:#x}, {:#b}, {:#o}!", 27, 27, 27); // Hello 0x1b, 0b11011, 0o33!
+    println!("Hello {:#016x}!", 27);
+    println!("27 {:#032b}", 27);
+
+    println!("{:#032x}", 27);
+
+    // 0x00000000000000000000000000001b
+    // #?, #x, #X, #b, #0
+    // ? => Debug
+    // x? => Debug with lower-case hexadecimal intergers
+    // X? => Debug with upper-case hexadecimal integers
+    // o => Octal
+    // x => LowerHex
+    // X => UpperHex
+    // p => Pointer
+    // b => Binary
+    // e => LowerExp
+    // E => UpperExp
+
+    // precision
+    // 1. An integer .N:
+    // 2. An integer or name followed by dollar sign .N$:
+    // 3. An asterisk .*:
+
+    println!("Hello {0} is {1:.16}", "x", 0.01);
+    println!("Hello {1} is {2:.0$}", 16, "x", 3.141592);
+    println!("Hello {} is {:.*}", "x", 5, 0.034);
+    println!("Hello {1} is {2:.*}", 5, "x", 0.123);
+    println!("Hello {} is {number:.prec$}", "x", prec = 16, number = 3.14);
+    println!(
+        "{}, `{name:>8.*}` has 3 right-aligned chararcters",
+        "Hello",
+        3,
+        name = "1234.56"
+    );
+
+    //[[fill]align][sign]['#']['0'][width]
+
+    // 소수점 포맷 (채우기 정렬방향(>^<) 부호(+) 채우는내용(0) 전체넓이(width$) .소수점아래길이(prec$))
+    let wp = format!("{:>+0width$.prec$}", 23.3434, width = 32, prec = 1);
+    println!("{}", wp);
+
+    println!("{:->+width$.prec$}", 3.141592, width = 16, prec = 6);
+    //포맷 (채울기호 정렬방향(>^<) 부호(+) '#' 채우는내용(0) 전체넓이(width$) .소수점아래길이(prec$) 'x, b, o')
+    println!("{:>#0width$.prec$b}", 27, width = 32, prec = 2);
+
+    //포맷 (채울기호 정렬방향(>^<) 부호(+) 채우는내용(0) 전체넓이(width$) .소수점아래길이(prec$))
+    println!("{:->#width$.prec$b}", -1, width = 32, prec = 2);
+
+    println!("{:#8X}", -1);
+}
+
+fn make_string(a: u32, b: &str) -> String {
+    format!("{b} {a}")
 }
