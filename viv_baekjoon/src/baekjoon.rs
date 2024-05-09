@@ -1,5 +1,134 @@
-use std::io::Write;
+use std::{collections::HashMap, io::Write};
 
+/// A + B -7
+pub fn bj_11021() {
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("fail to read");
+
+    let number = input.trim().parse::<usize>().unwrap();
+
+    for i in 1..=number {
+        let mut temp = String::new();
+        std::io::stdout().flush().unwrap();
+        std::io::stdin().read_line(&mut temp).expect("fail to read");
+
+        let array: Vec<usize> = temp
+            .trim()
+            .split('\u{0020}')
+            .map(|x| x.parse::<usize>().unwrap())
+            .collect();
+
+        let a = array[0];
+        let b = array[1];
+        println!("Case #{}: {}", i, a + b);
+    }
+}
+
+// 주사위 세개
+pub fn bj_2480() {
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("fail to read");
+
+    let array: Vec<isize> = input
+        .trim()
+        .split('\u{0020}')
+        .map(|x| x.parse::<isize>().unwrap())
+        .collect();
+
+    let mut groups: HashMap<isize, Vec<isize>> = HashMap::new();
+
+    array.into_iter().for_each(|x| {
+        let group = groups.entry(x).or_insert(vec![]);
+        group.push(x);
+    });
+
+    let mut price: isize = 0;
+    let mut max_value: isize = 0;
+    let mut max_count = 0;
+    let mut current_value = 0;
+
+    for (id, g) in groups {
+        if max_value < id {
+            max_value = id;
+        }
+        if max_count < g.len() {
+            max_count = g.len();
+            current_value = id;
+        }
+
+        price = match max_count {
+            1 => max_value * 100,
+            2 => 1_000 + (current_value * 100),
+            3 => 10_000 + (id * 1_000),
+            _ => 0,
+        };
+    }
+    println!("{}", price);
+}
+
+/// 사분면
+pub fn bj_14681() {
+    let mut array = vec![0; 2];
+    for i in 0..2 {
+        let mut input = String::new();
+        std::io::stdout().flush().unwrap();
+        std::io::stdin()
+            .read_line(&mut input)
+            .expect("fail to read");
+        let temp = input.trim().parse::<isize>().unwrap();
+        array[i] = temp;
+    }
+
+    let x = array[0];
+    let y = array[1];
+    let quadrat = match (x, y) {
+        a if a.0 > 0 && a.1 > 0 => 1,
+        a if a.0 > 0 && a.1 < 0 => 4,
+        a if a.0 < 0 && a.1 > 0 => 2,
+        a if a.0 < 0 && a.1 < 0 => 3,
+        _ => 1,
+    };
+    println!("{var}", var = quadrat);
+}
+
+/// 알람시계
+pub fn bj_2884() {
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("fail to read");
+
+    let array: Vec<isize> = input
+        .trim()
+        .split_whitespace()
+        .map(|x| x.parse::<isize>().unwrap())
+        .collect();
+
+    let hour = if array[0] == 0 { 0 } else { array[0] * 60 };
+    let minute = array[1];
+
+    let temp: isize = hour + minute - 45;
+    let total: isize = match temp {
+        t if t < 0 => (24 * 60) + t,
+        t if t == 0 => 0,
+        t if t > 0 => t,
+        _ => 0,
+    };
+
+    let h = total / 60;
+    let m = total % 60;
+
+    print!("{} {}\n", h, m);
+}
+
+/// 등록
 pub fn bj_7287() {
     println!("{}", 35);
     println!("{}", "kimbumjun");
