@@ -29,6 +29,7 @@ pub fn playground() {
     println!("\u{26EC} - {:?}", slice);
 }
 
+/// 3.
 pub fn playground_match() {
     //
 
@@ -38,6 +39,30 @@ pub fn playground_match() {
 
     println!("\u{26EC} {:?}, {:?}", six, none);
     if_let(3);
+
+    let x = Some(5);
+    let _y = 10;
+
+    match x {
+        Some(50) => println!("Got 50"),
+        Some(y) => println!("Matched, y = {y}"),
+        _ => println!("Default case, x = {:?}", x),
+    }
+
+    let x = 1;
+    match x {
+        1 | 2 => println!("one or two"),
+        3 => println!("three"),
+        _ => println!("anything"),
+    }
+
+    let x = 5;
+    match x {
+        1..=5 => println!("one throught five"),
+        _ => println!("something else"),
+    }
+
+    let x = 'c';
 }
 
 fn plus_one(x: Option<i32>) -> Option<i32> {
@@ -53,11 +78,6 @@ fn if_let(_max: u8) {
     if let Some(_max) = config_max {
         println!("The maximum is configured to be {}", _max);
     }
-
-    let favorite_color: Option<&str> = None;
-    let is_tuesday = false;
-    let age: Result<u8, _> = "34".parse();
-
     if let Some(temp) = config_max {
         println!("\u{26EC} if let - {}", temp);
     }

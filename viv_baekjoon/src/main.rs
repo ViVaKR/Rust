@@ -7,7 +7,7 @@ use baekjoon::{
     bj_2588, bj_2739, bj_2743, bj_2745, bj_2753, bj_2884, bj_7287, bj_7510, bj_9498, bj_fmt,
 };
 use baekjoon_b::{bj_11022, bj_11654, bj_27866, bj_8393};
-use baekjoon_c::{bj_10989, bj_1978};
+use baekjoon_c::{bj_10989, bj_1978, bj_25083, bj_9086};
 use playground::{playground, playground_match};
 mod baekjoon;
 mod baekjoon_b;
@@ -52,6 +52,7 @@ fn main() {
         7510 => bj_7510(), // 직각 삼각형
         8393 => bj_8393(),
         9498 => bj_9498(),
+        9086 => bj_9086(),   // first, last uppercase
         10171 => bj_10171(), // 고양이
         10172 => bj_10172(),
         10430 => bj_10430(), // 나눗셈
@@ -72,6 +73,7 @@ fn main() {
         11720 => bj_11720(), // 숫자의 합
         14681 => bj_14681(), // 사분면 고르기
         18108 => bj_18108(), // 불기 연도
+        25083 => bj_25083(), // 새싹
         27866 => bj_27866(), //
         _ => std::process::exit(0x0100),
     }

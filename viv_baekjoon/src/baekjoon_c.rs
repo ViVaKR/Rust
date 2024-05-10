@@ -1,5 +1,45 @@
 use std::io::Write;
 
+pub fn bj_25083() {
+    println!("         ,r'\"7");
+    let s2 = "r`-_   ,'  ,/";
+    println!("{}", s2);
+    println!(" \\. \". L_r'");
+    println!("   `~\\/");
+    println!("      |");
+    println!("      |");
+}
+
+/// 문자열
+pub fn bj_9086() {
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("fail to read");
+
+    let count = input.trim().parse::<u8>().unwrap();
+
+    for _ in 0..count {
+        let mut input = String::new();
+        std::io::stdout().flush().unwrap();
+        std::io::stdin()
+            .read_line(&mut input)
+            .expect("fail to read");
+
+        let c: String = input.trim().parse().unwrap();
+        println!(
+            "{first}{last}",
+            first = c.chars().next().unwrap(),
+            last = c.chars().last().unwrap()
+        );
+    }
+}
+
+// let mut handle = stdin().lock();
+// let mut byte = [0_u8; count];
+// handle.read_exact(&mut byte).unwrap();
+// char_array.push(byte);
 /// 소수 찾기
 pub fn bj_1978() {
     let mut input = String::new();
