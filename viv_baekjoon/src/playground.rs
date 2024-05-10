@@ -16,8 +16,61 @@ pub fn playground() {
     let len = s.len();
 
     println!("{} {}, {}, {:?}", len, &s[..len], &s[..], &s.as_bytes());
+
+    let s = String::from("hello world");
+
+    println!("\u{26EC} - {}", get_first_word(&s));
+
+    let s = "Hello, world!";
+    println!("{}", get_word(&s));
+
+    let a = [1, 2, 3, 4, 5];
+    let slice = &a[1..3];
+    println!("\u{26EC} - {:?}", slice);
 }
 
+pub fn playground_match() {
+    //
+
+    let five = Some(5);
+    let six = plus_one(five).unwrap();
+    let none = plus_one(None);
+
+    println!("\u{26EC} {:?}, {:?}", six, none);
+    if_let(3);
+}
+
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    //
+    match x {
+        Some(i) => Some(i + 1),
+        None => None,
+    }
+}
+
+fn if_let(_max: u8) {
+    let config_max = Some(3u8);
+    if let Some(_max) = config_max {
+        println!("The maximum is configured to be {}", _max);
+    }
+
+    let favorite_color: Option<&str> = None;
+    let is_tuesday = false;
+    let age: Result<u8, _> = "34".parse();
+
+    if let Some(temp) = config_max {
+        println!("\u{26EC} if let - {}", temp);
+    }
+}
+fn get_word(s: &str) -> &str {
+    let bytes = s.as_bytes();
+    for (i, &c) in bytes.iter().enumerate() {
+        if c == b' ' {
+            return &s[i..];
+        }
+    }
+    &s[..]
+}
 // fn dangle() -> String {
 //     let s = String::from("hello");
 //     // &s // 실체가 없으므로 오류.
@@ -40,4 +93,14 @@ fn first_word(s: &String) -> usize {
         }
     }
     s.len()
+}
+
+fn get_first_word(s: &String) -> &str {
+    let bytes = s.as_bytes();
+    for (i, &c) in bytes.iter().enumerate() {
+        if c == b' ' {
+            return &s[0..i];
+        }
+    }
+    &s[..]
 }

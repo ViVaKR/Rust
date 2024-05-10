@@ -8,7 +8,7 @@ use baekjoon::{
 };
 use baekjoon_b::{bj_11022, bj_11654, bj_27866, bj_8393};
 use baekjoon_c::{bj_10989, bj_1978};
-use playground::playground;
+use playground::{playground, playground_match};
 mod baekjoon;
 mod baekjoon_b;
 mod baekjoon_c;
@@ -29,6 +29,7 @@ fn main() {
     match choice {
         1 => bj_fmt(),
         2 => playground(),
+        3 => playground_match(),
         1008 => bj_1008(),
         1152 => bj_1152(),
         1330 => bj_1330(),
