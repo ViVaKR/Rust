@@ -31,10 +31,23 @@ pub fn playground() {
     println!("\u{26EC} - {:?}", slice);
 }
 
+/// Adds one to the number given.
+///
+/// # Example
+///
+/// ```
+/// let arg = 5;
+/// let answer = my_crete::add_one(arg);
+///
+/// assert_eq!(6, answer);
+/// ```
+pub fn add_one(x: i32) -> i32 {
+    x + 1
+}
+
 /// 3.
 pub fn playground_match() {
-    //
-
+    // add_one(46);
     let five = Some(5);
     let six = plus_one(five).unwrap();
     let none = plus_one(None);

@@ -1,0 +1,17 @@
+Refactoring
+Due to rust-analyzer's semantic understanding of your source code, it can also provide smart renames, across your Rust files. With your cursor on a variable, select Rename Symbol from the context menu, Command Palette, or via F2.
+
+The rust-analyzer extension also supports other code refactorings and code generation, which the extension calls Assists.
+
+Here are just a few of the refactorings available:
+
+Convert if statement to guarded return
+Inline variable
+Extract function
+Add return type
+Add import
+Formatting
+The Rust toolset includes a formatter, rustfmt, which can format your source code to conform to Rust conventions. You can format your Rust file using ⇧⌥F or by running the Format Document command from the Command Palette or the context menu in the editor.
+
+You also have the option to run the formatter on each save (Editor: Format On Save) or paste (Format On Paste) to keep your Rust code properly formatted automatically while you are working.
+

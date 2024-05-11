@@ -3,11 +3,13 @@ use std::{collections::HashMap, io::Write};
 
 // 단어공부 (group by)
 pub fn bj_1157() {
-    let mut word = String::from("Mississipi");
+    // Mississipi
+    let mut word = String::new();
     std::io::stdout().flush().unwrap();
     std::io::stdin().read_line(&mut word).expect("fail to read");
 
     let map_a: HashMap<char, u32> = word
+        .trim()
         .to_lowercase()
         .chars()
         .into_group_map_by(|&x| x)
@@ -15,12 +17,12 @@ pub fn bj_1157() {
         .map(|(k, v)| (k, v.len() as u32))
         .collect::<HashMap<char, u32>>();
 
-    let check = &map_a.iter().max_by_key(|x| x.1).unwrap();
-
     for item in &map_a {
         println!("{} - {}", item.0, item.1);
     }
-    println!("{:?},  max = {}", map_a, check.1);
+
+    let max = map_a.iter().max_by_key(|x| x.1).unwrap();
+    println!("{} {}", max.0, max.1);
 }
 
 // 영수증
@@ -139,6 +141,7 @@ pub fn bj_9086() {
 // let mut byte = [0_u8; count];
 // handle.read_exact(&mut byte).unwrap();
 // char_array.push(byte);
+
 /// 소수 찾기
 pub fn bj_1978() {
     let mut input = String::new();
