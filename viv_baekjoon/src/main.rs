@@ -7,7 +7,7 @@ use baekjoon::{
     bj_2588, bj_2739, bj_2743, bj_2745, bj_2753, bj_2884, bj_7287, bj_7510, bj_9498, bj_fmt,
 };
 use baekjoon_b::{bj_11022, bj_11654, bj_27866, bj_8393};
-use baekjoon_c::{bj_10989, bj_1978, bj_25083, bj_9086};
+use baekjoon_c::{bj_10989, bj_1157, bj_15552, bj_1978, bj_25083, bj_25304, bj_25314, bj_9086};
 use playground::{playground, playground_match};
 mod baekjoon;
 mod baekjoon_b;
@@ -32,6 +32,7 @@ fn main() {
         3 => playground_match(),
         1008 => bj_1008(),
         1152 => bj_1152(),
+        1157 => bj_1157(), // 단어공부
         1330 => bj_1330(),
         1406 => bj_1406(), // 메모장
         1546 => bj_1546(), // 평균
@@ -72,8 +73,11 @@ fn main() {
         11654 => bj_11654(), // ascii
         11720 => bj_11720(), // 숫자의 합
         14681 => bj_14681(), // 사분면 고르기
+        15552 => bj_15552(), // A + B
         18108 => bj_18108(), // 불기 연도
         25083 => bj_25083(), // 새싹
+        25304 => bj_25304(), // 영수증
+        25314 => bj_25314(), // 코딩은 체육과목
         27866 => bj_27866(), //
         _ => std::process::exit(0x0100),
     }

@@ -1,4 +1,103 @@
-use std::io::Write;
+use itertools::Itertools;
+use std::{collections::HashMap, io::Write};
+
+// 단어공부 (group by)
+pub fn bj_1157() {
+    let mut word = String::from("Mississipi");
+    std::io::stdout().flush().unwrap();
+    std::io::stdin().read_line(&mut word).expect("fail to read");
+
+    let map_a: HashMap<char, u32> = word
+        .to_lowercase()
+        .chars()
+        .into_group_map_by(|&x| x)
+        .into_iter()
+        .map(|(k, v)| (k, v.len() as u32))
+        .collect::<HashMap<char, u32>>();
+
+    let check = &map_a.iter().max_by_key(|x| x.1).unwrap();
+
+    for item in &map_a {
+        println!("{} - {}", item.0, item.1);
+    }
+    println!("{:?},  max = {}", map_a, check.1);
+}
+
+// 영수증
+pub fn bj_25304() {
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("fail to read");
+
+    let total = input.trim().parse::<usize>().unwrap();
+
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("fail to read");
+
+    let count = input.trim().parse::<usize>().unwrap();
+
+    let mut sum = 0;
+    for _ in 0..count {
+        let mut input = String::new();
+        std::io::stdout().flush().unwrap();
+        std::io::stdin()
+            .read_line(&mut input)
+            .expect("fail to read");
+
+        let array: Vec<usize> = input
+            .trim()
+            .split('\u{0020}')
+            .map(|x| x.parse::<usize>().unwrap())
+            .collect();
+        sum += array[0] * array[1];
+    }
+    if total.eq(&sum) {
+        println!("Yes");
+    } else {
+        println!("No");
+    }
+}
+
+// 코딩은 체육과목
+pub fn bj_25314() {
+    //
+    let mut input = String::new();
+    std::io::stdout().flush().unwrap();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("fail to read");
+
+    let length = input.trim().parse::<usize>().unwrap();
+    for _ in 0..length / 4 {
+        print!("long ");
+    }
+    println!("int");
+}
+
+pub fn bj_15552() {
+    let mut input = String::new();
+    std::io::stdin().read_line(&mut input).unwrap();
+    let count = input.trim().parse::<usize>().unwrap();
+
+    for _ in 0..count {
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input).unwrap();
+
+        let array: Vec<usize> = input
+            .trim()
+            .split_whitespace()
+            .map(|x| x.parse::<usize>().unwrap())
+            .collect();
+
+        let sum = array[0] + array[1];
+        println!("{sum}");
+    }
+}
 
 pub fn bj_25083() {
     println!("         ,r'\"7");

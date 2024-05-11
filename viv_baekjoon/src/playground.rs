@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+#![allow(unused)]
 pub fn playground() {
     // let s = dangle();
 
@@ -63,10 +65,151 @@ pub fn playground_match() {
     }
 
     let x = 'c';
+
+    match x {
+        'a'..='j' => println!("early ASCII letter"),
+        'k'..='z' => println!("late ASCII letter"),
+        _ => println!("something else"),
+    }
+
+    let p = Point { x: 5, y: 7 };
+    let Point { x: a, y: b } = p;
+    let Point { x, y } = p;
+
+    println!("{vara} - {varb}, {x} - {y}", vara = a, varb = b);
+
+    let pa = Point { x: 0, y: 7 };
+    match pa {
+        Point { x, y: 0 } => println!("On the x axis at {x}"),
+        Point { x: 0, y } => println!("On the y axis at {y}"),
+        Point { x, y } => {
+            println!("On neiter axis: ({x}, {y})");
+        }
+    }
+
+    let msg = Message::ChangeColor(Color::Rgb(125, 125, 125));
+
+    match msg {
+        Message::ChangeColor(Color::Rgb(r, g, b)) => {
+            println!("Change the color to red {}, green {}, and blue {}", r, g, b)
+        }
+        Message::ChangeColor(Color::Hsv(h, s, v)) => {
+            println!(
+                "Change the color to hue {}, saturation {}, value {}",
+                h, s, v
+            )
+        }
+        _ => (),
+    }
+
+    let txt = Message::Write(String::from("Hi, Everyone!"));
+
+    match txt {
+        Message::Quit => todo!(),
+        Message::Move { x, y } => todo!(),
+        Message::Write(message) => println!("{}", message),
+        Message::ChangeColor(_) => todo!(),
+    }
+
+    let ((feet, inches), Point { x, y }) = ((3, 10), Point { x: 3, y: -10 });
+    println!("{feet}, {inches}, {x}, {y}");
+
+    let mut setting_value = Some(5);
+    let new_setting_value = Some(10);
+
+    match (setting_value, new_setting_value) {
+        (Some(_), Some(_)) => {
+            println!("Can't overwrite an existing customized value");
+        }
+        _ => {
+            setting_value = new_setting_value;
+        }
+    }
+
+    println!("setting is {:?}", setting_value);
+
+    let numbers = (2, 4, 8, 16, 32);
+    match numbers {
+        (first, _, third, _, fifth) => {
+            println!("Some numbers: {first}, {third}, {fifth}");
+        }
+    }
+
+    let _x = 5;
+    let y = 10;
+    println!("{} {}", _x, y);
+
+    let s = Some(String::from("Hello"));
+    if let Some(temp) = &s {
+        println!("found a string {}, World", temp);
+    }
+    println!("{}", s.unwrap());
+
+    let origin = PointB { x: 0, y: 0, z: 0 };
+    match origin {
+        PointB { x, .. } => println!("x is {}", x),
+    }
+
+    let nums = (2, 4, 8, 16, 32);
+    match nums {
+        (first, .., last) => {
+            println!("Some numbers: {first}, {last}");
+        }
+    }
+
+    // 매치 가드
+    let n = Some(4);
+    match n {
+        Some(n) if n % 2 == 0 => println!("The number {} is even", n),
+        Some(n) => println!("The number {} is odd", n),
+        None => (),
+    }
+
+    let x = 4;
+    let y = false;
+    match x {
+        (4 | 5 | 6) if y => println!("yes"),
+        _ => println!("no"),
+    }
+
+    // let msg = MessageA::Hello { id: 5 };
+
+    // let rs: MessageA = msg;
+
+    // match msg {
+    //     MessageA::Hello { id: find @ 3..=7 } => println!("Found an id in range: {}", find),
+    //     MessageA::Hello { id: 10..=12 } => {
+    //         println!("Found and id in another range")
+    //     }
+    // }
+}
+
+enum MessageA {
+    Hello { id: i32 },
+}
+enum Color {
+    Rgb(i32, i32, i32),
+    Hsv(i32, i32, i32),
+}
+
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(Color),
+}
+
+struct PointB {
+    x: i32,
+    y: i32,
+    z: i32,
+}
+struct Point {
+    x: i32,
+    y: i32,
 }
 
 fn plus_one(x: Option<i32>) -> Option<i32> {
-    //
     match x {
         Some(i) => Some(i + 1),
         None => None,
