@@ -3,12 +3,14 @@ use core::panic;
 use interface::Print;
 use std::{fs, path::Path};
 use structs::Data;
+use usererror::print_result;
 
-use crate::result::pulling_results;
+use crate::{result::pulling_results, usererror::double_first};
 pub mod closure;
 pub mod interface;
 pub mod result;
 pub mod structs;
+pub mod usererror;
 
 pub fn closure_run() {
     //
@@ -78,6 +80,16 @@ pub fn array_check() {
     let strings = vec!["tofu", "93", "18"];
     println!("The first doubled is {:?}", pulling_results(numbers));
     println!("The first doubled is {:?}", pulling_results(strings));
+}
+
+pub fn user_error() {
+    let numbers = vec!["42", "93", "18"];
+    let empty = vec![];
+    let strings = vec!["tofu", "93", "18"];
+
+    print_result(double_first(numbers));
+    print_result(double_first(empty));
+    print_result(double_first(strings));
 }
 
 #[cfg(test)]

@@ -4,6 +4,7 @@ use bootcamp::{
     closure_run, print_data, read_text,
     result::{adder, multiply, prints},
     structs::Data,
+    user_error,
 };
 use std::{env, process};
 
@@ -51,6 +52,7 @@ fn main() {
             prints(multiply(&"35", &"23"));
             prints(adder(&"53", &"47"));
             array_check();
+            user_error();
         }
 
         _ => (),
