@@ -214,7 +214,7 @@ pub fn bj_1152() {
     println!("{}", words);
 }
 
-/// 별 찍기 - 7
+/// 별 찍기 (다이아몬드) - 7
 pub fn bj_2444() {
     let mut input = String::new();
     std::io::stdout().flush().unwrap();
@@ -222,7 +222,7 @@ pub fn bj_2444() {
         .read_line(&mut input)
         .expect("fail to read");
     let count = input.trim().parse::<usize>().unwrap();
-    let star = '*';
+    let star = '\u{002A}';
     for i in 0..count {
         print!("{:>c$}", star, c = count - i);
         for _ in 0..i {

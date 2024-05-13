@@ -8,6 +8,5 @@ pub struct Data {
 impl Print for Data {
     fn print(&self) {
         println!("\u{269E} {}\n\u{269E} {}", self.id, self.subject);
-
     }
 }
