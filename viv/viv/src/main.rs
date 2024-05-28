@@ -7,22 +7,124 @@ use bootcamp::{
     structs::Data,
     thread_run, user_error, vector_iterator,
 };
-use std::{env, io::Write, net::IpAddr, process};
+use std::collections::HashMap;
+use std::{env, hash::Hash, io::Write, net::IpAddr, process};
 
+fn print_str(s: String) {
+    print!("{}\n", s);
+}
+
+fn change(s: &mut String) {
+    s.push_str(", world!");
+    println!("{}", s);
+}
+
+fn dangle() -> String {
+    let s = String::from("hello");
+    s
+}
+
+fn borrow_object(s: &String) {
+    println!("{}", s);
+}
+
+fn get_addr(r: &char) -> String {
+    format!("{:p}", r)
+}
 fn main() {
     let args: Vec<String> = env::args().collect();
-
     let config = Config::build(&args).unwrap_or_else(|err| {
         println!("Problem parsing arguments: {err}");
         process::exit(1);
     });
-
     let mut menu: i32 = -1;
     if let Ok(temp) = config.query.parse::<i32>() {
         menu = temp;
     }
-
     match menu {
+        105 => {}
+        104 => {
+            // Dangling Reference
+            let reference_to_nothing = dangle();
+            println!("{}", reference_to_nothing);
+
+            let x: i32 = 5;
+            let y: &i32 = &x;
+            let p: &i32 = &x; // p is a reference to x
+
+            println!("\u{26EC} {:p} {}", p, *y); // 0x7ffeeb1b3a7c
+            let mut s = String::from("hello");
+            borrow_object(&s);
+
+            let mut sss: String = String::from("hello");
+            let p: &mut String = &mut sss;
+            p.push_str(" world");
+
+            let c: char = '글';
+            let h1: &char = &c;
+            let ref h2 = c;
+            println!("{:?} {:?}", get_addr(h1), get_addr(h2));
+            // println!("{:?} {:?}", h1, h2);
+        }
+        103 => {
+            // Borrowing
+            let mut s = String::from("hello");
+            {
+                let r1 = &mut s;
+                r1.push_str(", world!");
+                println!("{}", r1);
+            }
+            change(&mut s);
+
+            let mut ss = String::from("hello");
+            let r2 = &ss;
+            let r3 = &ss;
+            println!("{}, {}", r2, r3);
+
+            let r4 = &mut ss;
+        }
+        102 => {
+            #[derive(Debug)]
+            struct Person {
+                name: String,
+                age: Box<u8>,
+            }
+
+            let person = Person {
+                name: String::from("vivakr"),
+                age: Box::new(30),
+            };
+
+            //
+            let Person { name, ref age } = person;
+
+            let t: (String, String) = (String::from("hello"), String::from("world"));
+            let t2: (String, String) = (String::from("hello"), String::from("world"));
+            println!("{:?} {:?}", name, age);
+            let (s3, s4) = t2;
+            println!("{:?} {:?}", s3, s4);
+        }
+        101 => {
+            let s = String::from("hello");
+            assert_eq!(&[104, 101, 108, 108, 111], s.as_bytes());
+            print_str(s.clone());
+            println!("\u{26EC} {:?}", s.as_bytes());
+
+            let x: (i32, i32, (), &str) = (1, 2, (), "hello");
+            let y: (i32, i32, (), &str) = x;
+            println!("\u{26EC} {:?} {:?}", x, y);
+
+            let mut s2 = s;
+            s2.push_str(", world!");
+            println!("\u{26EC} {}", s2);
+
+            let x: Box<i32> = Box::new(5); // Box is a smart pointer
+            let mut y: Box<i32> = Box::new(1);
+
+            *y = 4;
+            println!("\u{26EC} {}", *y);
+            assert_eq!(*x, 5);
+        }
         1 => {
             let num = 10;
             println!(
@@ -124,8 +226,22 @@ fn main() {
 
             println!("{:032b}\n{:032b}", ff, n);
         }
+
+        10 => {
+            // Arbitrary vertices V
+            // Arbitrary edges E
+            // Support for loops & multiple edges
+            // Clean API
+            // Safe code only
+            // Memory efficient
+        }
         _ => (),
     }
+}
+
+pub struct Graph<VId, E = (), V = ()> {
+    vertices: HashMap<VId, V>,
+    adjacecy: HashMap<VId, Vec<(VId, E)>>,
 }
 
 struct Config {

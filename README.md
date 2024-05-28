@@ -4,11 +4,22 @@
 
 ```bash
   $ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-  $ rustc --version
+  $ rustc --version # 버전숫자, 커밋 해시, 커밋 날짜
+
+  $ rustup update # 최신 버전 업데이트
+  $ rustup self uninstall # 러스트 삭제
+  $ rustup doc
+
+  # 프로젝트 생성하기 (Hello, World)
+  $ mkdir ~/Projects && mkdir hello_world && cd hello_world
+  --> Create `main.rs` { "Hello, world!"};
+  $ rustc main.rs && ./main
+
+  - 간단한 프로그램은 rustc를 사용하고,
+  - 규모있는 프로그램은 cargo 를 사용함. : 외부 라이브러리 (dependency)
+
   $ cargo --version
   $ cargo --help
-  $ rustup update
-  $ rustup doc
   $ cargo new hello-rust
   $ cd hello-rust
   $ cargo build
@@ -19,9 +30,9 @@
 
   $ cargo check
   $ cargo login
-    #--> please paste the token found on https://crates.io/me below
-    #--> <token copy and paste> <enter>
-    #--> Login token for `crates-io` saved
+    --> please paste the token found on https://crates.io/me below
+    --> `token copy and paste` `enter`
+    --> Login token for `crates-io` saved
 
   # etc
   $ rustup show
