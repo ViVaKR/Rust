@@ -1,0 +1,12 @@
+       Fresh cfg-if v1.0.0
+       Fresh ppv-lite86 v0.2.17
+       Fresh libc v0.2.154
+       Fresh getrandom v0.2.15
+       Fresh rand_core v0.6.4
+       Fresh rand_chacha v0.3.1
+       Fresh rand v0.8.5
+       Fresh bootcamp v0.1.0 (/Users/vivakr/GitWorkspace/Rust/viv/bootcamp)
+       Dirty viv v0.1.0 (/Users/vivakr/GitWorkspace/Rust/viv/viv): stale, unknown reason
+   Compiling viv v0.1.0 (/Users/vivakr/GitWorkspace/Rust/viv/viv)
+     Running `rustc --crate-name viv --edition=2021 viv/src/main.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat --crate-type bin --emit=dep-info,link -C embed-bitcode=no -C debuginfo=2 -C split-debuginfo=unpacked -C metadata=9d39f3aca0b42daa -C extra-filename=-9d39f3aca0b42daa --out-dir /Users/vivakr/GitWorkspace/Rust/viv/target/debug/deps -C incremental=/Users/vivakr/GitWorkspace/Rust/viv/target/debug/incremental -L dependency=/Users/vivakr/GitWorkspace/Rust/viv/target/debug/deps --extern bootcamp=/Users/vivakr/GitWorkspace/Rust/viv/target/debug/deps/libbootcamp-dd3c49c9fc63c900.rlib`
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.23s

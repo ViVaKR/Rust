@@ -1,3 +1,4 @@
 #! /usr/bin/env zsh
 
-cargo build && cargo run -p viv $1 $2
+cargo build --verbose &>build.log
+cargo run --quiet -p viv $1

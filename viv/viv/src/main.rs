@@ -1,4 +1,6 @@
 #![allow(unused)]
+use ::std::fmt::Debug;
+use ::std::fmt::Display;
 use bootcamp::{
     array_check, cfg_attr,
     closure::adds,
@@ -8,6 +10,7 @@ use bootcamp::{
     thread_run, user_error, vector_iterator,
 };
 use std::collections::HashMap;
+use std::str;
 use std::{env, hash::Hash, io::Write, net::IpAddr, process};
 
 fn print_str(s: String) {
@@ -31,18 +34,161 @@ fn borrow_object(s: &String) {
 fn get_addr(r: &char) -> String {
     format!("{:p}", r)
 }
+
+fn greeting(s: &str) {
+    println!("{}", s);
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let config = Config::build(&args).unwrap_or_else(|err| {
         println!("Problem parsing arguments: {err}");
         process::exit(1);
     });
-    let mut menu: i32 = -1;
+    let mut menu: i32 = 105;
     if let Ok(temp) = config.query.parse::<i32>() {
         menu = temp;
     }
     match menu {
-        105 => {}
+        110 => {
+            // All elements in an array must be of the same type.
+            // Indexing starts at 0.
+            // The length of an array is fixed.
+            let arr: [i32; 5] = [1, 2, 3, 4, 5];
+            assert!(arr.len() == 5);
+
+            let arr1: [char; 3] = ['a', 'b', 'c'];
+
+            // Fill the blank
+            let arr2: [i32; 100] = [1; 100];
+            assert!(arr2[0] == 1);
+            assert!(arr2.len() == 100);
+
+            let names: [String; 2] = [String::from("vivakr"), String::from("kimbumjun")];
+
+            // 'Get' returns an Option<T>, it's safe to use
+            let name0 = names.get(0);
+
+            // But indexing is not safe
+            let _name1 = &names[1];
+            println!("{}, {}", name0.unwrap(), _name1);
+
+            let arr3: [i32; 5] = [1, 2, 3, 4, 5];
+            let arr4 = &arr3[0..2];
+            assert_eq!([1, 2], arr4);
+
+            let arr6 = "Hello, World!";
+
+            let kor: [char; 4] = ['대', '한', '민', '국'];
+            for c in kor.iter() {
+                print!("{}", c);
+            }
+            println!("\n{}", &kor[kor.len() - 1]);
+
+            println!("Success!");
+        } // Array
+        109 => {
+            // 한글 유니코드 출력
+            let data = b"Kim BumJun";
+            // lower case
+            println!("{:x?}", data);
+            // upper case
+            println!("{:X?}", data);
+
+            let data = [0x00..0xFF];
+            // print the leading zero
+            println!("{:02X?}", data);
+            // It can be combined with the pretty modifier as well
+            println!("{:#04X?}", data);
+
+            // AC00-D7AF
+            let mut v = (0xAC00..=0xD7A3).collect::<Vec<u32>>();
+            for t in v.into_iter().enumerate() {
+                let c = std::char::from_u32(t.1).unwrap();
+                print!("{:X?} {}, ", t.1, c);
+            }
+            println!();
+
+            for c in "가나다라마바사아자차카타파하".chars() {
+                print!("{:X?} ", c);
+            }
+
+            println!();
+
+            let kimbumjun = "\u{AE40}\u{BC94}\u{C900}";
+            println!("{}", kimbumjun);
+        }
+        108 => {
+            let kimbumjun = "\u{AE40}\u{BC94}\u{C900}";
+            let byte_escapt = "I'm writeng Ru\x73\x74";
+            println!("{} What are you doing\x3F {}", kimbumjun, byte_escapt);
+
+            let long_string = "String literals may span multiple lines. \
+            The line break and indentation in the source will be included \
+            in the string verbatim.";
+
+            println!("{}", long_string);
+
+            let raw_string = r"Escapes don't work here: \x3F \u{211D}";
+            println!("raw string: (r\"\") -> {}", raw_string);
+
+            // slice
+            // &str[start..end]
+            let s: String = String::from("Hi, I'm vivakr");
+            let s1: &str = &s[4..];
+            let s2: &str = &s[..4];
+            let s3: &str = &s[4..8];
+            println!("{}\n{}\n{}", s1, s2, s3);
+
+            println!("{}", kimbumjun);
+        }
+
+        107 => {
+            let mut s: String = String::from("I like to eat");
+            let s: String = s.replace("eat", "sleep");
+            println!("{}", s);
+
+            let s1: String = String::from("hello");
+            let s2: String = String::from(" world");
+            let s3: String = s1 + s2.as_str();
+            println!("{}", s3);
+
+            let s4 = "hi";
+
+            let s5 = String::from(s4); // s4.to_owned(); // &str -> String
+            println!("{}", s5);
+
+            let s6: String = "Hello, World~~".to_string(); // String::from("Hello, World~~");
+            let s7: &str = &s6;
+            let s8 = s6.as_str();
+            println!("{} - {}", s7, s8);
+
+            let s6 = "hello".to_string();
+        }
+        106 => {
+            let mut s: String = String::from("Hi");
+            s.push(','); // push a character
+            s.push_str(" Everyoe"); // push a string
+            s += "!"; // push a character
+
+            println!("{}", s);
+        }
+        105 => {
+            let s = String::from("Hello World");
+            let h = &s[0..5];
+            let w = &s[6..11];
+
+            let k: Box<str> = "hello, world".into();
+            greeting(&k);
+        }
+        105 => {
+            let mut s: String = String::from("hello, ");
+
+            let r2: &mut String = &mut s;
+            r2.push_str("World!");
+
+            println!("{}", r2);
+        }
         104 => {
             // Dangling Reference
             let reference_to_nothing = dangle();
@@ -126,30 +272,31 @@ fn main() {
             assert_eq!(*x, 5);
         }
         1 => {
-            let num = 10;
-            println!(
-                "\u{26EC} Hello, World! {num} + 1 = {}",
-                bootcamp::add_one(num)
-            );
+            println!("Hello, World!");
+            // let num = 10;
+            // println!(
+            //     "\u{26EC} Hello, World! {num} + 1 = {}",
+            //     bootcamp::add_one(num)
+            // );
 
-            let mut input = String::new();
-            std::io::stdout().flush().unwrap();
-            std::io::stdin()
-                .read_line(&mut input)
-                .expect("fail to read");
-            let number = input.trim().parse::<i32>().unwrap();
-            println!("-> {:#32b}", number);
-            println!();
-            let bit_length = 24;
-            let bits: u32 = (!0) << (32 - bit_length);
-            let net_mask = IpAddr::V4(bits.into());
-            println!("{:?}\n{:#b}\n{:#32b}\n{:#32b}", net_mask, bits, !0, !3);
+            // let mut input = String::new();
+            // std::io::stdout().flush().unwrap();
+            // std::io::stdin()
+            //     .read_line(&mut input)
+            //     .expect("fail to read");
+            // let number = input.trim().parse::<i32>().unwrap();
+            // println!("-> {:#32b}", number);
+            // println!();
+            // let bit_length = 24;
+            // let bits: u32 = (!0) << (32 - bit_length);
+            // let net_mask = IpAddr::V4(bits.into());
+            // println!("{:?}\n{:#b}\n{:#32b}\n{:#32b}", net_mask, bits, !0, !3);
 
-            println!("Get bit\n{:032b}", -47);
-            for i in (0..32).rev() {
-                print!("{}", (number >> i) & 1);
-            }
-            println!("\n");
+            // println!("Get bit\n{:032b}", -47);
+            // for i in (0..32).rev() {
+            //     print!("{}", (number >> i) & 1);
+            // }
+            // println!("\n");
 
             /*
             --> Get a bit : (i >> n) & 1
